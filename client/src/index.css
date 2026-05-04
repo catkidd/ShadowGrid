@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-charcoal: #121212;
+  --color-matte: #1a1a1a;
+  --color-neon: #00f3ff;
+  --color-neon-muted: rgba(0, 243, 255, 0.1);
+  
+  --font-sans: "Inter", sans-serif;
+  
+  --animate-slide-in: slide-in 0.3s ease-out forwards;
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-charcoal text-white font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply border-neon/50 shadow-[0_0_20px_rgba(0,243,255,0.1)];
+  }
+
+  .neon-glow {
+    @apply shadow-[0_0_15px_rgba(0,243,255,0.4)];
+  }
+
+  .neon-border {
+    @apply border border-neon/30;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-charcoal);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 243, 255, 0.3);
+}

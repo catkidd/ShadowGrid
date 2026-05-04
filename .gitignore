@@ -1,0 +1,53 @@
+# Dependency Directories
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment Variables & Secrets (CRITICAL)
+.env
+.env.local
+.env.*.local
+*.env
+server/.env
+client/.env
+
+# Build Outputs
+dist/
+client/dist/
+dist-ssr/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor Specific
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+
+# Temporary Files
+.temp/
+.tmp/
+.cache/
+
+# MongoDB / Local DB (If applicable)
+data/db/
+dump/
