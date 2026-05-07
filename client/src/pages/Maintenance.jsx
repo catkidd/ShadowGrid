@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Battery, Droplet } from 'lucide-react';
+import { Keyboard, Monitor, Mouse } from 'lucide-react';
 import FadeInUp from '../components/FadeInUp';
 
 const Maintenance = () => {
@@ -16,17 +16,17 @@ const Maintenance = () => {
                 <FadeInUp delay={100}>
                     <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-[#8B5CF6]/30 transition-colors">
                         <div className="flex items-center gap-4 mb-6">
-                            <Droplet className="text-[#8B5CF6]" size={28} />
-                            <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Cleaning Mechanical Switches</h2>
+                            <Keyboard className="text-[#8B5CF6]" size={28} />
+                            <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Cleaning Mechanical Keyboards</h2>
                         </div>
                         <div className="text-white/70 font-mono leading-relaxed space-y-4 text-sm">
-                            <p>Proper maintenance of your mechanical switches ensures optimal actuation and longevity.</p>
+                            <p>Proper maintenance of your switches and keycaps ensures optimal actuation and longevity.</p>
                             <ol className="list-decimal list-inside space-y-2 ml-4">
                                 <li>Disconnect the keyboard from the power source or host device.</li>
-                                <li>Use a keycap puller to gently remove the keycaps.</li>
-                                <li>Use compressed air to blow away dust and debris from the switch housing.</li>
-                                <li>For deep cleaning, lightly dampen a microfiber cloth with isopropyl alcohol (90%+) and wipe the exposed plate. Do not let liquid enter the switch stems.</li>
-                                <li>Allow to fully air dry before reattaching keycaps.</li>
+                                <li>Use a keycap puller to gently remove the keycaps. Wash keycaps in warm, soapy water and let them air dry completely.</li>
+                                <li>Use compressed air to blow away dust and debris from the switch housing and plate.</li>
+                                <li>For deep cleaning the plate, lightly dampen a microfiber cloth with isopropyl alcohol (90%+) and wipe the exposed areas. Do not let liquid enter the switch stems.</li>
+                                <li>Allow the entire board to fully dry before reattaching the keycaps.</li>
                             </ol>
                         </div>
                     </section>
@@ -35,16 +35,17 @@ const Maintenance = () => {
                 <FadeInUp delay={200}>
                     <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-[#8B5CF6]/30 transition-colors">
                         <div className="flex items-center gap-4 mb-6">
-                            <Settings className="text-[#8B5CF6]" size={28} />
-                            <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Updating Monitor Color Profiles</h2>
+                            <Monitor className="text-[#8B5CF6]" size={28} />
+                            <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Calibrating High-Refresh-Rate Monitors</h2>
                         </div>
                         <div className="text-white/70 font-mono leading-relaxed space-y-4 text-sm">
-                            <p>To maintain color accuracy, especially for creative workflows, regular profile updates are recommended.</p>
+                            <p>To ensure tear-free visuals and maximum pixel response times, follow these calibration steps.</p>
                             <ol className="list-decimal list-inside space-y-2 ml-4">
-                                <li>Download the latest ICC profile from the Protocols page.</li>
-                                <li>In Windows: Open Color Management, add the new ICC profile, and set it as Default.</li>
-                                <li>In macOS: Open Displays settings, select the Color Profile dropdown, and choose the newly installed profile.</li>
-                                <li>For hardware calibration, connect your compatible colorimeter and follow the SG-Display utility prompts.</li>
+                                <li>Ensure you are using the included DisplayPort 2.1 or HDMI 2.1 cable connected directly to your GPU.</li>
+                                <li>In your OS display settings, verify the refresh rate is set to the maximum supported value (e.g., 240Hz or 360Hz).</li>
+                                <li>Enable Adaptive Sync (G-Sync or FreeSync) in your GPU control panel.</li>
+                                <li>Open the monitor's OSD (On-Screen Display) and set Overdrive to the "Optimal" or "Normal" setting to prevent inverse ghosting.</li>
+                                <li>For color accuracy, load the ShadowGrid ICC profile available in the Protocols section.</li>
                             </ol>
                         </div>
                     </section>
@@ -53,17 +54,18 @@ const Maintenance = () => {
                 <FadeInUp delay={300}>
                     <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-[#8B5CF6]/30 transition-colors">
                         <div className="flex items-center gap-4 mb-6">
-                            <Battery className="text-[#8B5CF6]" size={28} />
-                            <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Wireless Peripheral Battery Health</h2>
+                            <Mouse className="text-[#8B5CF6]" size={28} />
+                            <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Updating Firmware for Gaming Mice</h2>
                         </div>
                         <div className="text-white/70 font-mono leading-relaxed space-y-4 text-sm">
-                            <p>Extend the lifespan of the internal lithium-polymer batteries in your wireless gear.</p>
-                            <ul className="list-disc list-inside space-y-2 ml-4">
-                                <li>Avoid fully depleting the battery to 0%. Recharge when it hits 20%.</li>
-                                <li>Do not leave devices plugged in continuously if they are fully charged.</li>
-                                <li>Keep peripherals away from extreme heat sources to prevent battery degradation.</li>
-                                <li>If storing for an extended period, charge the device to 50% beforehand.</li>
-                            </ul>
+                            <p>Keep your sensor tracking perfectly and debounce algorithms updated with the latest firmware.</p>
+                            <ol className="list-decimal list-inside space-y-2 ml-4">
+                                <li>Connect the gaming mouse directly to your PC using the provided USB cable (do not update over wireless).</li>
+                                <li>Download the latest firmware executable from the ShadowGrid Protocols library.</li>
+                                <li>Close any background applications that might interrupt the USB connection.</li>
+                                <li>Run the firmware updater as an Administrator and follow the on-screen prompts.</li>
+                                <li>Do not unplug the mouse or shut down the computer until the update indicates it is 100% complete.</li>
+                            </ol>
                         </div>
                     </section>
                 </FadeInUp>

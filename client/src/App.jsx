@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { ShoppingBag, Search, Layers, Zap, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { ShoppingBag, Search, Layers, Zap, ArrowRight, Menu, X } from 'lucide-react';
 import { CartProvider, useCart } from './context/CartContext';
 import ProductCard from './components/ProductCard';
 import CartModal from './components/CartModal';
@@ -10,6 +10,7 @@ import Protocols from './pages/Protocols';
 import Maintenance from './pages/Maintenance';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import ProductDetail from './pages/ProductDetail';
 import FadeInUp from './components/FadeInUp';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -39,7 +40,7 @@ const Home = () => {
     return (
         <>
             {/* Hero Section */}
-            <header className="relative py-20 overflow-hidden">
+            <header className="relative py-20 min-h-[calc(100vh-80px)] flex items-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon/5 rounded-full blur-[120px]" />
                 </div>
@@ -114,7 +115,20 @@ const Home = () => {
 
 const Layout = ({ children }) => {
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { cartCount } = useCart();
+    const [isCartPulsing, setIsCartPulsing] = useState(false);
+
+    useEffect(() => {
+        if (cartCount > 0) {
+            const startTimer = setTimeout(() => setIsCartPulsing(true), 0);
+            const stopTimer = setTimeout(() => setIsCartPulsing(false), 500);
+            return () => {
+                clearTimeout(startTimer);
+                clearTimeout(stopTimer);
+            };
+        }
+    }, [cartCount]);
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -130,10 +144,10 @@ const Layout = ({ children }) => {
                         </h1>
                     </Link>
 
-                    <div className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-white/60">
-                        <a href="#" className="hover:text-neon transition-colors">Keyboards</a>
-                        <a href="#" className="hover:text-neon transition-colors">Precision</a>
-                        <a href="#" className="hover:text-neon transition-colors">Displays</a>
+                    <div className="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-white/60">
+                        <Link to="/" className="hover:text-neon transition-colors">Keyboards</Link>
+                        <Link to="/" className="hover:text-neon transition-colors">Precision</Link>
+                        <Link to="/" className="hover:text-neon transition-colors">Displays</Link>
                         <Link to="/about" className="hover:text-[#8B5CF6] transition-colors">About</Link>
                     </div>
 
@@ -143,7 +157,7 @@ const Layout = ({ children }) => {
                         </button>
                         <button 
                             onClick={() => setIsCartOpen(true)}
-                            className="relative p-2 bg-white/5 rounded-lg border border-white/10 hover:border-neon transition-all"
+                            className={`relative p-2 bg-white/5 rounded-lg border hover:border-neon transition-all duration-300 ${isCartPulsing ? 'border-neon shadow-[0_0_15px_rgba(0,255,170,0.5)] animate-pulse' : 'border-white/10'}`}
                         >
                             <ShoppingBag size={20} />
                             {cartCount > 0 && (
@@ -152,8 +166,24 @@ const Layout = ({ children }) => {
                                 </span>
                             )}
                         </button>
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="block lg:hidden p-2 text-white/50 hover:text-white transition-colors"
+                        >
+                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
                     </div>
                 </div>
+
+                {/* Mobile Dropdown Menu */}
+                {isMobileMenuOpen && (
+                    <div className="flex lg:hidden bg-charcoal border-t border-white/5 py-4 px-6 flex-col gap-4 font-bold uppercase tracking-widest text-sm">
+                        <Link to="/" className="text-white/60 hover:text-neon transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Keyboards</Link>
+                        <Link to="/" className="text-white/60 hover:text-neon transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Precision</Link>
+                        <Link to="/" className="text-white/60 hover:text-neon transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Displays</Link>
+                        <Link to="/about" className="text-white/60 hover:text-[#8B5CF6] transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+                    </div>
+                )}
             </nav>
 
             {/* Page Content */}
@@ -177,9 +207,9 @@ const Layout = ({ children }) => {
                         <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-neon mb-6">Connect</h5>
                         <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-white/50">
                             <li><Link to="/about" className="hover:text-white transition-colors">About</Link></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Terminal</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Nexus</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">GitHub</a></li>
+                            <li><Link to="/" className="hover:text-white transition-colors">Terminal</Link></li>
+                            <li><Link to="/" className="hover:text-white transition-colors">Nexus</Link></li>
+                            <li><a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub</a></li>
                         </ul>
                     </div>
                     <div>
@@ -205,20 +235,30 @@ const Layout = ({ children }) => {
     );
 };
 
+const AnimatedRoutes = () => {
+    const location = useLocation();
+    return (
+        <FadeInUp key={location.pathname} className="flex-1 flex flex-col w-full h-full">
+            <Routes location={location}>
+                <Route path="/" element={<Home />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/protocols" element={<Protocols />} />
+                <Route path="/maintenance" element={<Maintenance />} />
+                <Route path="/contact" element={<Contact />} />
+            </Routes>
+        </FadeInUp>
+    );
+};
+
 const App = () => (
     <CartProvider>
         <Router>
             <ScrollToTop />
             <Layout>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/privacy" element={<PrivacyPolicy />} />
-                    <Route path="/terms" element={<TermsOfService />} />
-                    <Route path="/protocols" element={<Protocols />} />
-                    <Route path="/maintenance" element={<Maintenance />} />
-                    <Route path="/contact" element={<Contact />} />
-                </Routes>
+                <AnimatedRoutes />
             </Layout>
         </Router>
     </CartProvider>

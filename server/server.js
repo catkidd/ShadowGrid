@@ -15,9 +15,27 @@ app.use(express.json());
 
 // Database Connection
 const mockProducts = [
-    { _id: '1', name: 'ShadowBlade X1', brand: 'ShadowGrid', category: 'Input', price: 189.99, specs: ['Optical Switches', 'Aluminum Frame'], stock: 15, imageURL: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=800' },
-    { _id: '2', name: 'NeonPulse Pro', brand: 'ShadowGrid', category: 'Input', price: 79.99, specs: ['26,000 DPI', 'Lightweight 58g'], stock: 25, imageURL: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=800' },
-    { _id: '3', name: 'GridVision 27Q', brand: 'ShadowGrid', category: 'Output', price: 499.99, specs: ['27-inch IPS', '175Hz Refresh'], stock: 8, imageURL: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=800' }
+    { 
+        _id: '1', name: 'ShadowBlade X1', brand: 'ShadowGrid', category: 'Input', price: 189.99, specs: ['Optical Switches', 'Aluminum Frame', 'PBT Keycaps'], stock: 15, imageURL: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=800', description: 'The ShadowBlade X1 is meticulously engineered for the absolute edge in competitive scenarios. Featuring custom-tuned optical switches that actuate at the speed of light, housed within an aerospace-grade aluminum chassis for zero flex.', rating: 4.8, reviewsCount: 3,
+        reviews: [
+            { user: "Alex_C", rating: 5, date: "2 weeks ago", comment: "The optical switches are insanely fast. Best keyboard I've ever owned.", verifiedPurchase: true },
+            { user: "TechNinja99", rating: 4, date: "1 month ago", comment: "Build quality is top tier. The software needs a bit of polishing though.", verifiedPurchase: true },
+            { user: "ProGamer_X", rating: 5, date: "2 months ago", comment: "Absolutely zero flex. This thing is a tank.", verifiedPurchase: false }
+        ]
+    },
+    { 
+        _id: '2', name: 'NeonPulse Pro', brand: 'ShadowGrid', category: 'Input', price: 79.99, specs: ['26,000 DPI', 'Lightweight 58g', 'PTFE Skates'], stock: 25, imageURL: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=800', description: 'Achieve pixel-perfect tracking with the NeonPulse Pro. Weighing in at a mere 58 grams, this ultralight peripheral glides effortlessly on pure PTFE skates. Equipped with our proprietary 26K DPI sensor for flawless precision.', rating: 4.7, reviewsCount: 2,
+        reviews: [
+            { user: "AimBot_Real", rating: 5, date: "1 week ago", comment: "Super light. My tracking improved immediately.", verifiedPurchase: true },
+            { user: "CasualDave", rating: 4, date: "3 weeks ago", comment: "Great mouse, but the shape takes a few days to get used to.", verifiedPurchase: true }
+        ]
+    },
+    { 
+        _id: '3', name: 'GridVision 27Q', brand: 'ShadowGrid', category: 'Output', price: 499.99, specs: ['27-inch IPS', '175Hz Refresh', '1ms Response'], stock: 8, imageURL: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=800', description: 'Immerse yourself in the Grid. The GridVision 27Q delivers stunning color accuracy through its Fast IPS panel, paired with a blazing 175Hz refresh rate and 1ms response time to ensure every frame is delivered with zero latency.', rating: 5.0, reviewsCount: 1,
+        reviews: [
+            { user: "Visuals_God", rating: 5, date: "4 days ago", comment: "The colors out of the box are perfect. No dead pixels. Worth every penny.", verifiedPurchase: true }
+        ]
+    }
 ];
 
 let useMock = false;
@@ -41,6 +59,37 @@ app.get('/api/products', async (req, res) => {
         res.json(products);
     } catch (err) {
         res.json(mockProducts); // Fallback on error
+    }
+});
+
+// GET /api/products/:id - Fetch a single product
+app.get('/api/products/:id', async (req, res) => {
+    try {
+        if (useMock) {
+            const product = mockProducts.find(p => p._id === req.params.id);
+            if (product) return res.json(product);
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // If ID is not a valid MongoDB ObjectId, check mock products (useful if DB is empty and we loaded mock data)
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            const mockProduct = mockProducts.find(p => p._id === req.params.id);
+            if (mockProduct) return res.json(mockProduct);
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            // Fallback to mock data if not found in DB
+            const mockProduct = mockProducts.find(p => p._id === req.params.id);
+            if (mockProduct) return res.json(mockProduct);
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json(product);
+    } catch (err) {
+        const mockProduct = mockProducts.find(p => p._id === req.params.id);
+        if (mockProduct) return res.json(mockProduct);
+        res.status(500).json({ message: 'Server Error' });
     }
 });
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import { ShoppingCart, Cpu, Plus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
 
     return (
-        <div className="glass-card group relative flex flex-col h-full">
+        <div className="glass-card group relative flex flex-col h-full transition-all duration-300 hover:-translate-y-2 border border-transparent hover:border-neon/50">
             {/* Category Badge */}
             <div className="absolute top-4 left-4 z-10">
                 <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-neon text-charcoal rounded-full neon-glow">
@@ -15,22 +16,24 @@ const ProductCard = ({ product }) => {
             </div>
 
             {/* Image Container */}
-            <div className="relative aspect-[4/3] overflow-hidden">
+            <Link to={`/product/${product._id}`} className="relative aspect-[4/3] overflow-hidden block">
                 <img 
                     src={product.imageURL} 
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-charcoal/40 group-hover:bg-charcoal/20 transition-colors duration-300" />
-            </div>
+            </Link>
 
             {/* Content */}
             <div className="p-6 flex flex-col flex-grow">
                 <div className="flex justify-between items-start mb-2">
                     <div>
-                        <h3 className="text-xl font-bold tracking-tight text-white group-hover:text-neon transition-colors">
-                            {product.name}
-                        </h3>
+                        <Link to={`/product/${product._id}`}>
+                            <h3 className="text-xl font-bold tracking-tight text-white group-hover:text-neon transition-colors">
+                                {product.name}
+                            </h3>
+                        </Link>
                         <p className="text-white/50 text-sm">{product.brand}</p>
                     </div>
                     <span className="text-xl font-mono font-bold text-neon">
