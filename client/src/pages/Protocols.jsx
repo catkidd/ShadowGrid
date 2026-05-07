@@ -15,8 +15,8 @@ const Protocols = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Input Devices */}
                 <FadeInUp delay={100}>
-                    <div className="bg-white/5 border border-white/10 rounded-xl p-8 hover:border-[#8B5CF6]/50 transition-colors h-full">
-                        <div className="flex items-center gap-4 mb-6 text-[#8B5CF6]">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-8 hover:border-neon/50 transition-colors h-full">
+                        <div className="flex items-center gap-4 mb-6 text-neon">
                             <Keyboard size={32} />
                             <h2 className="text-2xl font-bold uppercase tracking-widest font-mono text-white">Input Devices</h2>
                         </div>
@@ -24,7 +24,7 @@ const Protocols = () => {
                         <div className="space-y-6">
                             <section>
                                 <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3 font-mono">
-                                    <Download size={16} className="text-[#8B5CF6]" />
+                                    <Download size={16} className="text-neon" />
                                     Firmware Downloads
                                 </h3>
                                 <ul className="text-white/60 font-mono text-sm space-y-2 list-disc list-inside">
@@ -35,12 +35,12 @@ const Protocols = () => {
 
                             <section>
                                 <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3 font-mono">
-                                    <Bluetooth size={16} className="text-[#8B5CF6]" />
+                                    <Bluetooth size={16} className="text-neon" />
                                     Device Pairing Instructions
                                 </h3>
                                 <ol className="text-white/60 font-mono text-sm space-y-2 list-decimal list-inside">
                                     <li>Hold pairing button for 3 seconds.</li>
-                                    <li>Wait for the Electric Violet LED indicator.</li>
+                                    <li>Wait for the Neon LED indicator.</li>
                                     <li>Select "ShadowGrid Device" in host settings.</li>
                                 </ol>
                             </section>
@@ -50,8 +50,8 @@ const Protocols = () => {
 
                 {/* Output Devices */}
                 <FadeInUp delay={200}>
-                    <div className="bg-white/5 border border-white/10 rounded-xl p-8 hover:border-[#8B5CF6]/50 transition-colors h-full">
-                        <div className="flex items-center gap-4 mb-6 text-[#8B5CF6]">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-8 hover:border-neon/50 transition-colors h-full">
+                        <div className="flex items-center gap-4 mb-6 text-neon">
                             <Monitor size={32} />
                             <h2 className="text-2xl font-bold uppercase tracking-widest font-mono text-white">Output Devices</h2>
                         </div>
@@ -59,7 +59,7 @@ const Protocols = () => {
                         <div className="space-y-6">
                             <section>
                                 <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3 font-mono">
-                                    <Download size={16} className="text-[#8B5CF6]" />
+                                    <Download size={16} className="text-neon" />
                                     Firmware Downloads
                                 </h3>
                                 <ul className="text-white/60 font-mono text-sm space-y-2 list-disc list-inside">
@@ -70,7 +70,7 @@ const Protocols = () => {
 
                             <section>
                                 <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3 font-mono">
-                                    <Settings size={16} className="text-[#8B5CF6]" />
+                                    <Settings size={16} className="text-neon" />
                                     Driver Compatibility
                                 </h3>
                                 <div className="overflow-x-auto">
@@ -85,12 +85,12 @@ const Protocols = () => {
                                         <tbody>
                                             <tr className="border-b border-white/5">
                                                 <td className="py-2">Windows 11</td>
-                                                <td className="py-2 text-[#8B5CF6]">Supported</td>
+                                                <td className="py-2 text-neon font-bold">Supported</td>
                                                 <td className="py-2">22H2+</td>
                                             </tr>
                                             <tr className="border-b border-white/5">
                                                 <td className="py-2">macOS</td>
-                                                <td className="py-2 text-[#8B5CF6]">Supported</td>
+                                                <td className="py-2 text-neon font-bold">Supported</td>
                                                 <td className="py-2">13.0+</td>
                                             </tr>
                                             <tr>

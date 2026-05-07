@@ -55,7 +55,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-[#8B5CF6] transition-colors font-mono text-sm"
+                    className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-neon transition-colors font-mono text-sm"
                     placeholder="Jane Doe"
                   />
                 </div>
@@ -69,7 +69,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-[#8B5CF6] transition-colors font-mono text-sm"
+                    className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-neon transition-colors font-mono text-sm"
                     placeholder="jane@example.com"
                   />
                 </div>
@@ -84,7 +84,7 @@ const Contact = () => {
                   name="orderNumber"
                   value={formData.orderNumber}
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-[#8B5CF6] transition-colors font-mono text-sm"
+                  className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-neon transition-colors font-mono text-sm"
                   placeholder="SG-109284"
                 />
               </div>
@@ -99,14 +99,14 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-[#8B5CF6] transition-colors font-mono text-sm resize-none"
+                  className="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-neon transition-colors font-mono text-sm resize-none"
                   placeholder="Describe your issue or inquiry..."
                 ></textarea>
               </div>
 
               <button
                 type="submit"
-                className="flex items-center gap-2 bg-[#8B5CF6] hover:bg-[#8B5CF6]/80 text-white font-bold uppercase tracking-widest text-sm px-8 py-3 rounded transition-colors font-mono"
+                className="flex items-center gap-2 bg-neon hover:bg-neon/80 text-charcoal font-bold uppercase tracking-widest text-sm px-8 py-3 rounded transition-colors font-mono"
               >
                 <Send size={18} />
                 Transmit Signal
@@ -119,7 +119,7 @@ const Contact = () => {
           <FadeInUp delay={200}>
             <div className="bg-white/5 p-6 rounded-xl border border-white/10">
               <div className="flex items-center gap-3 mb-4">
-                <MessageSquare className="text-[#8B5CF6]" size={24} />
+                <MessageSquare className="text-neon" size={24} />
                 <h3 className="font-bold uppercase tracking-widest text-white font-mono">
                   Community
                 </h3>
@@ -129,7 +129,7 @@ const Contact = () => {
               </p>
               <a
                 href="#"
-                className="text-[#8B5CF6] hover:text-white transition-colors font-mono text-sm underline decoration-white/20 underline-offset-4"
+                className="text-neon hover:text-white transition-colors font-mono text-sm underline decoration-white/20 underline-offset-4"
               >
                 discord.gg/shadowgrid
               </a>
@@ -139,7 +139,7 @@ const Contact = () => {
           <FadeInUp delay={300}>
             <div className="bg-white/5 p-6 rounded-xl border border-white/10">
               <div className="flex items-center gap-3 mb-4">
-                <Mail className="text-[#8B5CF6]" size={24} />
+                <Mail className="text-neon" size={24} />
                 <h3 className="font-bold uppercase tracking-widest text-white font-mono">
                   Direct Email
                 </h3>
@@ -149,7 +149,7 @@ const Contact = () => {
               </p>
               <a
                 href="mailto:support@shadowgrid.io"
-                className="text-[#8B5CF6] hover:text-white transition-colors font-mono text-sm underline decoration-white/20 underline-offset-4"
+                className="text-neon hover:text-white transition-colors font-mono text-sm underline decoration-white/20 underline-offset-4"
               >
                 support@shadowgrid.io
               </a>
@@ -163,7 +163,7 @@ const Contact = () => {
         <div className="mt-16 bg-white/5 p-4 rounded-xl border border-white/10">
             <div className="flex items-center gap-3 mb-4 px-2">
             <h3 className="font-bold uppercase tracking-widest text-white font-mono flex items-center gap-2">
-                <MapPin className="text-[#8B5CF6]" size={24} />
+                <MapPin className="text-neon" size={24} />
                 ShadowGrid HQ
             </h3>
             </div>
@@ -184,7 +184,7 @@ const Contact = () => {
 
       {/* Toast Notification */}
       {showToast && (
-        <div className="fixed bottom-8 right-8 bg-[#8B5CF6] text-white px-6 py-4 rounded shadow-lg flex items-center gap-3 animate-bounce z-50">
+        <div className="fixed bottom-8 right-8 bg-neon text-charcoal px-6 py-4 rounded shadow-lg flex items-center gap-3 animate-bounce z-50">
           <Send size={20} />
           <div>
             <h4 className="font-bold uppercase text-sm tracking-widest font-mono">

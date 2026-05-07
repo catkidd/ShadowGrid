@@ -74,11 +74,6 @@ const ProductDetail = () => {
                 <div className="sticky top-32">
                     <FadeInUp>
                         <div className="relative aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden glass-card group">
-                            <div className="absolute top-6 left-6 z-10">
-                                <span className="px-4 py-2 text-xs uppercase tracking-widest font-black bg-neon text-charcoal rounded-full neon-glow">
-                                    {product.category}
-                                </span>
-                            </div>
                             <img 
                                 src={product.imageURL} 
                                 alt={product.name}
@@ -118,9 +113,21 @@ const ProductDetail = () => {
                             </p>
 
                             <div className="flex items-center gap-6">
-                                <span className="text-4xl font-mono font-black text-white">
-                                    ${product.price}
-                                </span>
+                                <div className="flex flex-col">
+                                    {product.originalPrice && (
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-lg text-white/30 line-through font-mono">
+                                                ${product.originalPrice}
+                                            </span>
+                                            <span className="text-xs font-black bg-red-500 text-white px-2 py-0.5 rounded animate-pulse">
+                                                -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                                            </span>
+                                        </div>
+                                    )}
+                                    <span className="text-5xl font-mono font-black text-white">
+                                        ${product.price}
+                                    </span>
+                                </div>
                                 <span className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest ${product.stock < 10 ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
                                     {product.stock} Units Available
                                 </span>

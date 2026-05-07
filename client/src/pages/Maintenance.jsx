@@ -14,9 +14,9 @@ const Maintenance = () => {
             
             <div className="space-y-12">
                 <FadeInUp delay={100}>
-                    <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-[#8B5CF6]/30 transition-colors">
+                    <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-neon/30 transition-colors">
                         <div className="flex items-center gap-4 mb-6">
-                            <Keyboard className="text-[#8B5CF6]" size={28} />
+                            <Keyboard className="text-neon" size={28} />
                             <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Cleaning Mechanical Keyboards</h2>
                         </div>
                         <div className="text-white/70 font-mono leading-relaxed space-y-4 text-sm">
@@ -33,9 +33,9 @@ const Maintenance = () => {
                 </FadeInUp>
 
                 <FadeInUp delay={200}>
-                    <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-[#8B5CF6]/30 transition-colors">
+                    <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-neon/30 transition-colors">
                         <div className="flex items-center gap-4 mb-6">
-                            <Monitor className="text-[#8B5CF6]" size={28} />
+                            <Monitor className="text-neon" size={28} />
                             <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Calibrating High-Refresh-Rate Monitors</h2>
                         </div>
                         <div className="text-white/70 font-mono leading-relaxed space-y-4 text-sm">
@@ -52,9 +52,9 @@ const Maintenance = () => {
                 </FadeInUp>
 
                 <FadeInUp delay={300}>
-                    <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-[#8B5CF6]/30 transition-colors">
+                    <section className="bg-white/5 p-8 rounded-xl border border-white/10 hover:border-neon/30 transition-colors">
                         <div className="flex items-center gap-4 mb-6">
-                            <Mouse className="text-[#8B5CF6]" size={28} />
+                            <Mouse className="text-neon" size={28} />
                             <h2 className="text-2xl font-bold uppercase tracking-widest text-white font-mono">Updating Firmware for Gaming Mice</h2>
                         </div>
                         <div className="text-white/70 font-mono leading-relaxed space-y-4 text-sm">
