@@ -1,0 +1,31 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: shadowgrid-api
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        generateValue: true # This is a placeholder, user should provide real URI
+
+  # Frontend Static Site
+  - type: web
+    name: shadowgrid-web
+    env: static
+    plan: free
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: shadowgrid-api
+          property: url
