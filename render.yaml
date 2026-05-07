@@ -28,4 +28,4 @@ services:
         fromService:
           type: web
           name: shadowgrid-api
-          property: url
+          property: host
