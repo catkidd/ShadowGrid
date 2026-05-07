@@ -11,8 +11,9 @@ const reviewSchema = new mongoose.Schema({
 const productSchema = new mongoose.Schema({
     name: { type: String, required: true },
     brand: { type: String, required: true },
-    category: { type: String, required: true, enum: ['Input', 'Output'] },
+    category: { type: String, required: true, enum: ['Keyboards', 'Mice', 'Displays'] },
     price: { type: Number, required: true },
+    originalPrice: { type: Number },
     specs: [{ type: String }],
     stock: { type: Number, required: true },
     imageURL: { type: String, required: true },
