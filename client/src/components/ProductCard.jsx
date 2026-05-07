@@ -8,12 +8,14 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="glass-card group relative flex flex-col h-full transition-all duration-300 hover:-translate-y-2 border border-transparent hover:border-neon/50">
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4 z-10">
-                <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-neon text-charcoal rounded-full neon-glow">
-                    {product.category}
-                </span>
-            </div>
+            {/* Discount Badge */}
+            {product.originalPrice && (
+                <div className="absolute top-4 right-4 z-10">
+                    <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-red-500 text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
+                        -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                    </span>
+                </div>
+            )}
 
             {/* Image Container */}
             <Link to={`/product/${product._id}`} className="relative aspect-[4/3] overflow-hidden block">
@@ -21,6 +23,9 @@ const ProductCard = ({ product }) => {
                     src={product.imageURL} 
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800'; // Generic high-tech hardware fallback
+                    }}
                 />
                 <div className="absolute inset-0 bg-charcoal/40 group-hover:bg-charcoal/20 transition-colors duration-300" />
             </Link>
@@ -36,9 +41,16 @@ const ProductCard = ({ product }) => {
                         </Link>
                         <p className="text-white/50 text-sm">{product.brand}</p>
                     </div>
-                    <span className="text-xl font-mono font-bold text-neon">
-                        ${product.price}
-                    </span>
+                    <div className="flex flex-col items-end">
+                        {product.originalPrice && (
+                            <span className="text-xs text-white/30 line-through font-mono">
+                                ${product.originalPrice}
+                            </span>
+                        )}
+                        <span className="text-xl font-mono font-bold text-neon">
+                            ${product.price}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Specs */}
