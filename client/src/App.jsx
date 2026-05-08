@@ -86,7 +86,7 @@ const Home = ({ preFilter = 'All' }) => {
                                 </p>
                                 <div className="flex flex-wrap gap-4">
                                     <button 
-                                        onClick={() => document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' })}
+                                        onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
                                         className="px-8 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-xs rounded-lg neon-glow flex items-center gap-2 group"
                                     >
                                         Explore The Grid
@@ -218,7 +218,7 @@ const Home = ({ preFilter = 'All' }) => {
                     </div>
                     <div className="mt-12 text-center">
                         <button 
-                            onClick={() => document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' })}
+                            onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
                             className="px-10 py-4 bg-white/5 border border-white/10 hover:border-white/30 text-white font-black uppercase tracking-widest text-xs rounded-lg transition-all"
                         >
                             View All Units

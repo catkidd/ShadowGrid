@@ -55,7 +55,7 @@ const ProductCard = ({ product }) => {
 
                 {/* Specs */}
                 <div className="flex flex-wrap gap-2 my-4">
-                    {product.specs.slice(0, 3).map((spec, i) => (
+                    {product.specs?.slice(0, 3).map((spec, i) => (
                         <span key={i} className="text-[10px] text-white/40 border border-white/10 px-2 py-0.5 rounded uppercase">
                             {spec}
                         </span>

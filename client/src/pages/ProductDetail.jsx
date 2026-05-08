@@ -139,7 +139,7 @@ const ProductDetail = () => {
                         <div className="mb-10">
                             <h3 className="text-lg font-bold uppercase tracking-widest mb-6">Hardware Specifications</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {product.specs.map((spec, i) => (
+                                {product.specs?.map((spec, i) => (
                                     <div key={i} className="glass-card p-4 flex items-center gap-4">
                                         <div className="w-2 h-2 bg-neon rounded-full" />
                                         <span className="text-white/80 font-medium">{spec}</span>
@@ -239,20 +239,20 @@ const ProductDetail = () => {
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
                                             <div className="flex items-center gap-3 mb-1">
-                                                <span className="font-bold text-white">{review.user}</span>
-                                                {review.verifiedPurchase && (
+                                                <span className="font-bold text-white">{review?.user}</span>
+                                                {review?.verifiedPurchase && (
                                                     <span className="text-[10px] uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">Verified</span>
                                                 )}
                                             </div>
                                             <div className="flex text-yellow-400">
                                                 {[...Array(5)].map((_, i) => (
-                                                    <Star key={i} size={12} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-white/20"} />
+                                                    <Star key={i} size={12} fill={i < (review?.rating || 5) ? "currentColor" : "none"} className={i < (review?.rating || 5) ? "" : "text-white/20"} />
                                                 ))}
                                             </div>
                                         </div>
-                                        <span className="text-white/30 text-xs font-mono">{review.date}</span>
+                                        <span className="text-white/30 text-xs font-mono">{review?.date}</span>
                                     </div>
-                                    <p className="text-white/70 text-sm leading-relaxed">{review.comment}</p>
+                                    <p className="text-white/70 text-sm leading-relaxed">{review?.comment}</p>
                                 </div>
                             ))
                         ) : (
