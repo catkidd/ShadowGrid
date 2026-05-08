@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Search, Layers, Zap, ArrowRight, Menu, X, ShieldCheck, Mail, Check } from 'lucide-react';
 import { CartProvider, useCart } from './context/CartContext';
 import { SearchProvider } from './context/SearchProvider';
 import { useSearch } from './context/SearchContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ProductCard from './components/ProductCard';
 import CartModal from './components/CartModal';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -15,6 +16,9 @@ import PaymentMethods from './pages/PaymentMethods';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import ProductDetail from './pages/ProductDetail';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import AdminDashboard from './pages/AdminDashboard';
 import FadeInUp from './components/FadeInUp';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -27,7 +31,7 @@ const Home = ({ preFilter = 'All' }) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const apiUrl = import.meta.env.VITE_API_URL || 'https://shadowgrid-x8m6.onrender.com';
+                const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : 'https://shadowgrid-x8m6.onrender.com');
                 const response = await fetch(`${apiUrl}/api/products`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
@@ -313,7 +317,7 @@ const Layout = ({ children }) => {
                         <Link to="/keyboards" className="hover:text-neon transition-colors">Keyboards</Link>
                         <Link to="/precision" className="hover:text-neon transition-colors">Precision</Link>
                         <Link to="/displays" className="hover:text-neon transition-colors">Displays</Link>
-                        <Link to="/about" className="hover:text-[#8B5CF6] transition-colors">About</Link>
+                        <NavAuthLinks />
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -349,6 +353,7 @@ const Layout = ({ children }) => {
                                 </span>
                             )}
                         </button>
+                        <NavProfile />
                         <button 
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="block lg:hidden p-2 text-white/50 hover:text-white transition-colors"
@@ -364,7 +369,7 @@ const Layout = ({ children }) => {
                         <Link to="/keyboards" className="text-white/60 hover:text-neon transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Keyboards</Link>
                         <Link to="/precision" className="text-white/60 hover:text-neon transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Precision</Link>
                         <Link to="/displays" className="text-white/60 hover:text-neon transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Displays</Link>
-                        <Link to="/about" className="text-white/60 hover:text-[#8B5CF6] transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+                        <MobileNavAuthLinks closeMenu={() => setIsMobileMenuOpen(false)} />
                     </div>
                 )}
             </nav>
@@ -379,15 +384,18 @@ const Layout = ({ children }) => {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-neon/5 blur-[120px] rounded-full" />
                 <div className="container mx-auto px-6 relative z-10 text-center">
                     <FadeInUp>
-                        <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4">Neural Update Protocol</h3>
-                        <p className="text-white/60 mb-10 max-w-lg mx-auto font-medium">Join 50,000+ operators. Receive encrypted updates on new hardware drops and grid maintenance.</p>
+                        <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4">Newsletter</h3>
+                        <p className="text-white/60 mb-10 max-w-lg mx-auto font-medium">Join 50,000+ members. Receive updates on new product drops and maintenance.</p>
                         <form className="max-w-2xl mx-auto" onSubmit={(e) => e.preventDefault()}>
                             <div className="flex flex-col md:flex-row gap-4 mb-6">
                                 <div className="flex-1 relative">
+                                    <label htmlFor="newsletter-email" className="sr-only">Newsletter Email</label>
                                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={20} />
                                     <input 
+                                        id="newsletter-email"
+                                        name="newsletter-email"
                                         type="email" 
-                                        placeholder="OPERATOR_EMAIL@GRID.COM"
+                                        placeholder="yourname@email.com"
                                         className="w-full bg-white/5 border border-white/10 rounded-lg py-4 pl-12 pr-4 text-sm font-mono focus:border-neon focus:outline-none transition-all"
                                     />
                                 </div>
@@ -501,6 +509,13 @@ const Layout = ({ children }) => {
     );
 };
 
+const ProtectedRoute = ({ children }) => {
+    const { isAdmin, loading } = useAuth();
+    if (loading) return <div className="min-h-screen flex items-center justify-center text-neon font-mono uppercase tracking-[0.3em]">Authenticating...</div>;
+    if (!isAdmin) return <Navigate to="/login" replace />;
+    return children;
+};
+
 const AnimatedRoutes = () => {
     const location = useLocation();
     return (
@@ -519,12 +534,23 @@ const AnimatedRoutes = () => {
                 <Route path="/shipping" element={<ShippingReturns />} />
                 <Route path="/payments" element={<PaymentMethods />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route 
+                    path="/admin/dashboard" 
+                    element={
+                        <ProtectedRoute>
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    } 
+                />
             </Routes>
         </FadeInUp>
     );
 };
 
 const App = () => (
+    <AuthProvider>
     <SearchProvider>
         <CartProvider>
             <Router>
@@ -535,6 +561,52 @@ const App = () => (
             </Router>
         </CartProvider>
     </SearchProvider>
+    </AuthProvider>
 );
+
+const NavAuthLinks = () => {
+    const { user, isAdmin } = useAuth();
+    if (!user) return <Link to="/login" className="text-white/70 hover:text-neon transition-colors text-xs font-black uppercase tracking-widest">Login</Link>;
+    
+    return (
+        <>
+            {isAdmin && <Link to="/admin/dashboard" className="text-neon hover:text-white transition-colors text-xs font-black uppercase tracking-widest">Admin</Link>}
+            <Link to="/about" className="text-white/70 hover:text-neon transition-colors text-xs font-black uppercase tracking-widest">About</Link>
+        </>
+    );
+};
+
+const NavProfile = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+    if (!user) return null;
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
+    return (
+        <button 
+            onClick={handleLogout}
+            className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full hover:border-red-500/30 hover:text-red-400 transition-all group"
+            title="Logout"
+        >
+            <ShieldCheck size={14} className="text-neon group-hover:text-red-400" />
+            <span className="text-[10px] font-mono uppercase tracking-widest">{user.email.split('@')[0]}</span>
+        </button>
+    );
+};
+
+const MobileNavAuthLinks = ({ closeMenu }) => {
+    const { user, isAdmin } = useAuth();
+    return (
+        <>
+            <Link to="/about" className="text-white/60 hover:text-[#8B5CF6] transition-colors py-2" onClick={closeMenu}>About</Link>
+            {isAdmin && <Link to="/admin/dashboard" className="text-neon hover:text-white transition-colors py-2" onClick={closeMenu}>Admin</Link>}
+            {!user && <Link to="/login" className="text-white hover:text-neon transition-colors py-2" onClick={closeMenu}>Login</Link>}
+        </>
+    );
+};
 
 export default App;

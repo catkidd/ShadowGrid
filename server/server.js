@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const Product = require('./models/Product');
+const User = require('./models/User');
+const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
@@ -11,16 +13,43 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-    origin: ['https://shadowgrid-client.onrender.com', 'http://localhost:5173'],
+    origin: ['https://shadowgrid-client.onrender.com', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
 app.use(express.json());
 
+// Auth Middleware
+const authenticateJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
+const isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        next();
+    } else {
+        res.status(403).json({ message: 'Access denied. Admin role required.' });
+    }
+};
+
 // Database Connection
-const mockProducts = [
+let mockProducts = [
     { 
-        _id: '1', name: 'ShadowBlade X1', brand: 'ShadowGrid', category: 'Keyboards', price: 189.99, originalPrice: 249.99, specs: ['Optical Switches', 'Aluminum Frame', 'PBT Keycaps'], stock: 15, imageURL: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800', description: 'The ShadowBlade X1 is meticulously engineered for the absolute edge in competitive scenarios. Featuring custom-tuned optical switches that actuate at the speed of light, housed within an aerospace-grade aluminum chassis for zero flex.', rating: 4.8, reviewsCount: 3,
+        _id: '1', name: 'ShadowBlade X1', brand: 'ShadowGrid', category: 'Keyboards', price: 189.99, originalPrice: 249.99, specs: ['Optical Switches', 'Aluminum Frame', 'PBT Keycaps'], stock: 15, imageURL: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&auto=format&fit=crop&q=80', description: 'The ShadowBlade X1 is meticulously engineered for the absolute edge in competitive scenarios. Featuring custom-tuned optical switches that actuate at the speed of light, housed within an aerospace-grade aluminum chassis for zero flex.', rating: 4.8, reviewsCount: 3,
         reviews: [
             { user: "Alex_C", rating: 5, date: "2 weeks ago", comment: "The optical switches are insanely fast. Best keyboard I've ever owned.", verifiedPurchase: true },
             { user: "TechNinja99", rating: 4, date: "1 month ago", comment: "Build quality is top tier. The software needs a bit of polishing though.", verifiedPurchase: true },
@@ -28,26 +57,26 @@ const mockProducts = [
         ]
     },
     { 
-        _id: '2', name: 'NeonPulse Pro', brand: 'ShadowGrid', category: 'Mice', price: 79.99, originalPrice: 119.99, specs: ['26,000 DPI', 'Lightweight 58g', 'PTFE Skates'], stock: 25, imageURL: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800', description: 'Achieve pixel-perfect tracking with the NeonPulse Pro. Weighing in at a mere 58 grams, this ultralight peripheral glides effortlessly on pure PTFE skates. Equipped with our proprietary 26K DPI sensor for flawless precision.', rating: 4.7, reviewsCount: 2,
+        _id: '2', name: 'NeonPulse Pro', brand: 'ShadowGrid', category: 'Mice', price: 79.99, originalPrice: 119.99, specs: ['26,000 DPI', 'Lightweight 58g', 'PTFE Skates'], stock: 25, imageURL: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80', description: 'Achieve pixel-perfect tracking with the NeonPulse Pro. Weighing in at a mere 58 grams, this ultralight peripheral glides effortlessly on pure PTFE skates. Equipped with our proprietary 26K DPI sensor for flawless precision.', rating: 4.7, reviewsCount: 2,
         reviews: [
             { user: "AimBot_Real", rating: 5, date: "1 week ago", comment: "Super light. My tracking improved immediately.", verifiedPurchase: true },
             { user: "CasualDave", rating: 4, date: "3 weeks ago", comment: "Great mouse, but the shape takes a few days to get used to.", verifiedPurchase: true }
         ]
     },
     { 
-        _id: '3', name: 'GridVision 27Q', brand: 'ShadowGrid', category: 'Displays', price: 499.99, originalPrice: 649.99, specs: ['27-inch IPS', '175Hz Refresh', '1ms Response'], stock: 8, imageURL: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800', description: 'Immerse yourself in the Grid. The GridVision 27Q delivers stunning color accuracy through its Fast IPS panel, paired with a blazing 175Hz refresh rate and 1ms response time to ensure every frame is delivered with zero latency.', rating: 5.0, reviewsCount: 1,
+        _id: '3', name: 'GridVision 27Q', brand: 'ShadowGrid', category: 'Displays', price: 499.99, originalPrice: 649.99, specs: ['27-inch IPS', '175Hz Refresh', '1ms Response'], stock: 8, imageURL: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&auto=format&fit=crop&q=80', description: 'Immerse yourself in the Grid. The GridVision 27Q delivers stunning color accuracy through its Fast IPS panel, paired with a blazing 175Hz refresh rate and 1ms response time to ensure every frame is delivered with zero latency.', rating: 5.0, reviewsCount: 1,
         reviews: [
             { user: "Visuals_God", rating: 5, date: "4 days ago", comment: "The colors out of the box are perfect. No dead pixels. Worth every penny.", verifiedPurchase: true }
         ]
     },
     { 
-        _id: '4', name: 'ApexClick Zero', brand: 'ShadowGrid', category: 'Mice', price: 129.99, originalPrice: 159.99, specs: ['8,000Hz Polling', 'Magnesium Shell', 'Optical Click'], stock: 12, imageURL: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800', description: 'Experience zero latency with the ApexClick Zero. Built with a ultra-strong magnesium alloy exoskeleton for the ultimate strength-to-weight ratio.', rating: 4.9, reviewsCount: 42, reviews: []
+        _id: '4', name: 'ApexClick Zero', brand: 'ShadowGrid', category: 'Mice', price: 129.99, originalPrice: 159.99, specs: ['8,000Hz Polling', 'Magnesium Shell', 'Optical Click'], stock: 12, imageURL: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&auto=format&fit=crop&q=80', description: 'Experience zero latency with the ApexClick Zero. Built with a ultra-strong magnesium alloy exoskeleton for the ultimate strength-to-weight ratio.', rating: 4.9, reviewsCount: 42, reviews: []
     },
     { 
-        _id: '5', name: 'TitanFrame 32X', brand: 'ShadowGrid', category: 'Displays', price: 899.99, originalPrice: 1099.99, specs: ['32-inch OLED', '240Hz Refresh', '0.03ms Response'], stock: 5, imageURL: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800', description: 'The absolute pinnacle of display technology. 4K OLED resolution with infinite contrast and industry-leading motion clarity.', rating: 4.9, reviewsCount: 15, reviews: []
+        _id: '5', name: 'TitanFrame 32X', brand: 'ShadowGrid', category: 'Displays', price: 899.99, originalPrice: 1099.99, specs: ['32-inch OLED', '240Hz Refresh', '0.03ms Response'], stock: 5, imageURL: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=80', description: 'The absolute pinnacle of display technology. 4K OLED resolution with infinite contrast and industry-leading motion clarity.', rating: 4.9, reviewsCount: 15, reviews: []
     },
     { 
-        _id: '6', name: 'PhantomType 65', brand: 'ShadowGrid', category: 'Keyboards', price: 149.99, originalPrice: 199.99, specs: ['65% Layout', 'Gasket Mount', 'Hotswappable'], stock: 20, imageURL: 'https://images.unsplash.com/photo-1595225403330-22c6085a690e?w=800', description: 'A compact masterpiece. The PhantomType 65 offers a premium typing experience with its double-gasket mounting system and pre-lubed stabilizers.', rating: 4.7, reviewsCount: 28, reviews: []
+        _id: '6', name: 'PhantomType 65', brand: 'ShadowGrid', category: 'Keyboards', price: 149.99, originalPrice: 199.99, specs: ['65% Layout', 'Gasket Mount', 'Hotswappable'], stock: 20, imageURL: 'https://images.unsplash.com/photo-1541140134513-85a161dc4a00?w=800&auto=format&fit=crop&q=80', description: 'A compact masterpiece. The PhantomType 65 offers a premium typing experience with its double-gasket mounting system and pre-lubed stabilizers.', rating: 4.7, reviewsCount: 28, reviews: []
     }
 ];
 
@@ -62,6 +91,74 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/shadowgri
     });
 
 // Routes
+
+// Auth Routes
+app.post('/api/auth/signup', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) return res.status(400).json({ message: 'User already exists' });
+
+        const user = new User({ email, password });
+        await user.save();
+
+        const token = jwt.sign(
+            { id: user._id, email: user.email, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.status(201).json({ token, user: { email: user.email, role: user.role } });
+    } catch (err) {
+        res.status(500).json({ message: 'Signup failed', error: err.message });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    const { email, password } = req.body;
+    
+    // Mock Login Fallback (for development if DB is down)
+    if (useMock && email === 'admin@shadowgrid.com' && password === 'admin_password_2026') {
+        const token = jwt.sign(
+            { id: 'mock_admin_id', email: 'admin@shadowgrid.com', role: 'admin' },
+            process.env.JWT_SECRET || 'fallback_secret',
+            { expiresIn: '24h' }
+        );
+        return res.json({ token, user: { email: 'admin@shadowgrid.com', role: 'admin' } });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user || !(await user.comparePassword(password))) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        const token = jwt.sign(
+            { id: user._id, email: user.email, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({ token, user: { email: user.email, role: user.role } });
+    } catch (err) {
+        res.status(500).json({ message: 'Login failed', error: err.message });
+    }
+});
+
+app.get('/api/auth/me', authenticateJWT, async (req, res) => {
+    // Mock User Fallback
+    if (useMock && req.user.id === 'mock_admin_id') {
+        return res.json({ email: 'admin@shadowgrid.com', role: 'admin' });
+    }
+
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch user data' });
+    }
+});
 
 // GET /api/products - Fetch all products
 app.get('/api/products', async (req, res) => {
@@ -150,6 +247,66 @@ app.post('/api/orders', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Admin Product Routes (Protected)
+app.post('/api/products', authenticateJWT, isAdmin, async (req, res) => {
+    if (useMock) {
+        const newProduct = { ...req.body, _id: Date.now().toString(), specs: typeof req.body.specs === 'string' ? req.body.specs.split(',').map(s => s.trim()) : req.body.specs };
+        mockProducts.push(newProduct);
+        return res.status(201).json(newProduct);
+    }
+
+    try {
+        const product = new Product(req.body);
+        await product.save();
+        res.status(201).json(product);
+    } catch (err) {
+        res.status(400).json({ message: 'Failed to create product', error: err.message });
+    }
+});
+
+app.put('/api/products/:id', authenticateJWT, isAdmin, async (req, res) => {
+    if (useMock) {
+        const index = mockProducts.findIndex(p => p._id === req.params.id);
+        if (index === -1) return res.status(404).json({ message: 'Product not found' });
+        
+        const updatedProduct = { 
+            ...mockProducts[index], 
+            ...req.body,
+            specs: typeof req.body.specs === 'string' ? req.body.specs.split(',').map(s => s.trim()) : req.body.specs
+        };
+        mockProducts[index] = updatedProduct;
+        return res.json(updatedProduct);
+    }
+
+    try {
+        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+        res.json(product);
+    } catch (err) {
+        res.status(400).json({ message: 'Failed to update product', error: err.message });
+    }
+});
+
+app.delete('/api/products/:id', authenticateJWT, isAdmin, async (req, res) => {
+    if (useMock) {
+        const index = mockProducts.findIndex(p => p._id === req.params.id);
+        if (index === -1) return res.status(404).json({ message: 'Product not found' });
+        mockProducts.splice(index, 1);
+        return res.json({ message: 'Product deleted successfully' });
+    }
+
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+        res.json({ message: 'Product deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to delete product', error: err.message });
+    }
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running!`);
+    console.log(`Local:            http://localhost:${PORT}`);
+    console.log(`Network:          http://0.0.0.0:${PORT}`);
+    console.log('Press Ctrl+C to stop');
 });
