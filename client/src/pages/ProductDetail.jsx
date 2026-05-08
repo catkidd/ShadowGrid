@@ -18,11 +18,11 @@ const ProductDetail = () => {
             try {
                 const apiUrl = import.meta.env.VITE_API_URL || 'https://shadowgrid-x8m6.onrender.com';
                 const response = await fetch(`${apiUrl}/api/products/${id}`);
-                if (!response.ok) throw new Error('Product not found');
+                if (!response.ok) throw new Error('Product not found or API error');
                 const data = await response.json();
                 setProduct(data);
             } catch (err) {
-                console.error(err);
+                console.error('Fetch error:', err);
                 setError(err.message);
             } finally {
                 setLoading(false);

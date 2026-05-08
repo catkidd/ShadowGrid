@@ -29,8 +29,14 @@ const Home = ({ preFilter = 'All' }) => {
             try {
                 const apiUrl = import.meta.env.VITE_API_URL || 'https://shadowgrid-x8m6.onrender.com';
                 const response = await fetch(`${apiUrl}/api/products`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
-                setProducts(data);
+                if (Array.isArray(data)) {
+                    setProducts(data);
+                } else {
+                    console.error('API returned non-array data:', data);
+                    setProducts([]);
+                }
             } catch (err) {
                 console.error('Failed to fetch products:', err);
                 setProducts([]);
