@@ -27,7 +27,7 @@ const Home = ({ preFilter = 'All' }) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+                const apiUrl = import.meta.env.VITE_API_URL || 'https://shadowgrid-x8m6.onrender.com';
                 const response = await fetch(`${apiUrl}/api/products`);
                 const data = await response.json();
                 setProducts(data);
