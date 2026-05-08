@@ -1,5 +1,4 @@
-import React from 'react';
-import { ShoppingCart, Cpu, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Keyboard, Monitor, Mouse } from 'lucide-react';
 import FadeInUp from '../components/FadeInUp';
 

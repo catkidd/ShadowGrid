@@ -1,4 +1,3 @@
-import React from 'react';
 import FadeInUp from '../components/FadeInUp';
 
 const PrivacyPolicy = () => {

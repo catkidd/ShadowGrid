@@ -1,4 +1,3 @@
-import React from 'react';
 import { CreditCard, ShieldCheck, Zap, Lock } from 'lucide-react';
 import FadeInUp from '../components/FadeInUp';
 

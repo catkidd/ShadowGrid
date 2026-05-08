@@ -1,4 +1,3 @@
-import React from 'react';
 import { Download, Bluetooth, Settings, Monitor, Keyboard } from 'lucide-react';
 import FadeInUp from '../components/FadeInUp';
 

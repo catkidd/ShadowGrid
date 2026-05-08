@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Send, MessageSquare, Mail, MapPin } from "lucide-react";
 import FadeInUp from '../components/FadeInUp';
 
@@ -46,10 +46,11 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
+                  <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
                     Name
                   </label>
                   <input
+                    id="name"
                     type="text"
                     name="name"
                     value={formData.name}
@@ -60,10 +61,11 @@ const Contact = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
+                  <label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
                     Email
                   </label>
                   <input
+                    id="email"
                     type="email"
                     name="email"
                     value={formData.email}
@@ -76,10 +78,11 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
+                <label htmlFor="orderNumber" className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
                   Order Number (Optional)
                 </label>
                 <input
+                  id="orderNumber"
                   type="text"
                   name="orderNumber"
                   value={formData.orderNumber}
@@ -90,10 +93,11 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
+                <label htmlFor="message" className="text-xs font-bold uppercase tracking-widest text-white/60 font-mono">
                   Message
                 </label>
                 <textarea
+                  id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}

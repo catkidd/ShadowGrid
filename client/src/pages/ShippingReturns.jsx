@@ -1,4 +1,3 @@
-import React from 'react';
 import { Truck, RotateCcw, ShieldCheck, Globe } from 'lucide-react';
 import FadeInUp from '../components/FadeInUp';
 

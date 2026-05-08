@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from 'react';
 import { Target, PenTool, Users } from 'lucide-react';
 
 import FadeInUp from '../components/FadeInUp';

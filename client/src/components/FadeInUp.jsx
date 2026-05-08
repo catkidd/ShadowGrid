@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const FadeInUp = ({ children, delay = 0, className = "" }) => {
     const ref = useRef(null);
