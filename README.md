@@ -88,11 +88,52 @@ npm run dev
 
 ---
 
+---
+
+## Admin System Guide
+
+The ShadowGrid Admin System allows you to manage products directly from the website.
+
+### 1. Create an Admin Account
+1. Go to the **Sign Up** page.
+2. Register a new account with your email.
+3. By default, new users have the `user` role. To become an **Admin**, you must manually update your record in the database:
+   - If using MongoDB Compass or Shell:
+     ```javascript
+     db.users.updateOne({ email: "your-email@example.com" }, { $set: { role: "admin" } });
+     ```
+4. **Login** with your updated account.
+
+### 2. Access the Admin Dashboard
+Once logged in as an Admin, a new **"Admin"** link will appear in the top navigation bar. Click it to enter the **Admin Dashboard**.
+
+### 3. Managing Products
+- **Add Product**: Click the **"Add New Product"** button at the top right. Fill in the product details and click **"Save Product"**.
+- **Edit Product**: Click the **Edit** icon (pencil) on any product card. Update the information and save.
+- **Delete Product**: Click the **Delete** icon (trash can) on any product card. Confirm the decommissioning protocol to remove it from the grid.
+
+> [!IMPORTANT]
+> Administrative actions (Add, Edit, Delete) are protected. Even if someone finds the dashboard URL, the server will reject any changes without a valid Admin token.
+
+---
+
 ## Troubleshooting
 
-- **"MongoDB Connection Error"**: Don't worry! This is normal if you haven't installed MongoDB. The app will automatically switch to "Mock Mode" so you can still see the products.
-- **"Port in use"**: If you see this, it means another app is using the same slot. Vite will usually pick a new one (like `5174`) automatically.
-- **Styling looks broken**: Ensure you are running the project in a modern browser like Chrome, Edge, or Brave.
+- **"Connection error. Grid access unavailable."**: 
+  - **Check API Connection**: Open your browser console (F12). Look for the log "Attempting login connection to: ...". Ensure it says `http://localhost:5000` when working locally.
+  - **Check Backend Status**: Ensure your server is running (`cd server && npm run dev`). If the server terminal shows a MongoDB error, follow the "Database Issue" steps below.
+  - **Database Issue?**: If your MongoDB connection is failing (e.g., Atlas is blocked), you have two options:
+    1. **Emergency Admin**: Use the credentials below. I have added a fallback in `server.js` that allows these to work even without a database.
+       - **Email**: `admin@shadowgrid.com`
+       - **Password**: `admin_password_2026`
+    2. **Local MongoDB**: Install MongoDB locally and change `MONGODB_URI` in `server/.env` to `mongodb://localhost:27017/shadowgrid`.
+  - **Atlas Whitelist**: If you are using MongoDB Atlas, make sure your current IP address is added to the **Network Access** whitelist in the Atlas dashboard.
+- **"MongoDB Connection Error"**: Don't worry! This is normal if you haven't installed MongoDB. The app will automatically switch to "Mock Mode" for products.
+- **"Port in use"**: If you see this, Vite will usually pick a new one (like `5174`) automatically.
+
+## New Features
+
+- **Password Toggle**: You can now click the eye icon in the password field to show or hide your password during login and signup.
 
 ## License
 
