@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { 
     Plus, Edit, Trash2, LayoutDashboard, Package, 
     Save, X, ShoppingCart, TrendingUp, Box, 
-    Search, ChevronRight, AlertCircle, CheckCircle2 
+    Search, ChevronRight
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
@@ -18,7 +18,7 @@ const AdminDashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [formData, setFormData] = useState({
-        name: '', brand: '', category: '', price: '', originalPrice: '', stock: '', imageURL: '', description: '', specs: ''
+        name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', stock: '', imageURL: '', description: '', specs: ''
     });
 
     // Mock Orders for demonstration
@@ -30,7 +30,8 @@ const AdminDashboard = () => {
         { id: 'ORD-1005', customer: 'Charlie Black', date: '2026-05-05', status: 'Cancelled', total: 189.99 },
     ], []);
 
-    const fetchProducts = async () => {
+
+    const fetchProducts = useCallback(async () => {
         try {
             const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : 'https://shadowgrid-x8m6.onrender.com');
             const response = await fetch(`${apiUrl}/api/products`);
@@ -41,13 +42,13 @@ const AdminDashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         if (!authLoading && isAdmin) {
             fetchProducts();
         }
-    }, [authLoading, isAdmin]);
+    }, [authLoading, isAdmin, fetchProducts]);
 
     const metrics = useMemo(() => {
         const totalStock = products.reduce((sum, p) => sum + (p.stock || 0), 0);
@@ -99,6 +100,7 @@ const AdminDashboard = () => {
             ...formData,
             price: parseFloat(formData.price),
             originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
+            discount: formData.discount ? parseFloat(formData.discount) : null,
             stock: parseInt(formData.stock),
             specs: typeof formData.specs === 'string' ? formData.specs.split(',').map(s => s.trim()) : formData.specs
         };
@@ -111,7 +113,7 @@ const AdminDashboard = () => {
     };
 
     const resetForm = () => {
-        setFormData({ name: '', brand: '', category: '', price: '', originalPrice: '', stock: '', imageURL: '', description: '', specs: '' });
+        setFormData({ name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', stock: '', imageURL: '', description: '', specs: '' });
         setEditingProduct(null);
         setIsCreating(false);
     };
@@ -259,9 +261,10 @@ const AdminDashboard = () => {
                                         <InputField label="Brand" value={formData.brand} onChange={v => setFormData({...formData, brand: v})} placeholder="e.g. ShadowGrid" />
                                         <InputField label="Category" value={formData.category} onChange={v => setFormData({...formData, category: v})} placeholder="e.g. Keyboards" />
                                         <InputField label="Inventory Count" type="number" value={formData.stock} onChange={v => setFormData({...formData, stock: v})} placeholder="0" />
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <InputField label="Sale Price ($)" type="number" value={formData.price} onChange={v => setFormData({...formData, price: v})} placeholder="0.00" />
-                                            <InputField label="List Price ($) - Optional" type="number" value={formData.originalPrice} onChange={v => setFormData({...formData, originalPrice: v})} placeholder="0.00" />
+                                            <InputField label="List Price ($)" type="number" value={formData.originalPrice} onChange={v => setFormData({...formData, originalPrice: v})} placeholder="0.00" />
+                                            <InputField label="Discount (%)" type="number" value={formData.discount} onChange={v => setFormData({...formData, discount: v})} placeholder="0.00" />
                                         </div>
                                         <div className="md:col-span-2">
                                             <InputField label="Specifications (Comma separated)" value={Array.isArray(formData.specs) ? formData.specs.join(', ') : formData.specs} onChange={v => setFormData({...formData, specs: v})} placeholder="e.g. RGB, Mechanical, Wireless" />
@@ -340,6 +343,7 @@ const AdminDashboard = () => {
                                                                         category: product.category,
                                                                         price: product.price,
                                                                         originalPrice: product.originalPrice || '',
+                                                                        discount: product.discount || '',
                                                                         stock: product.stock,
                                                                         imageURL: product.imageURL,
                                                                         description: product.description,
