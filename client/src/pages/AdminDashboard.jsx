@@ -18,7 +18,7 @@ const AdminDashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [formData, setFormData] = useState({
-        name: '', brand: '', category: '', price: '', stock: '', imageURL: '', description: '', specs: ''
+        name: '', brand: '', category: '', price: '', originalPrice: '', stock: '', imageURL: '', description: '', specs: ''
     });
 
     // Mock Orders for demonstration
@@ -98,6 +98,7 @@ const AdminDashboard = () => {
         const payload = {
             ...formData,
             price: parseFloat(formData.price),
+            originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
             stock: parseInt(formData.stock),
             specs: typeof formData.specs === 'string' ? formData.specs.split(',').map(s => s.trim()) : formData.specs
         };
@@ -110,7 +111,7 @@ const AdminDashboard = () => {
     };
 
     const resetForm = () => {
-        setFormData({ name: '', brand: '', category: '', price: '', stock: '', imageURL: '', description: '', specs: '' });
+        setFormData({ name: '', brand: '', category: '', price: '', originalPrice: '', stock: '', imageURL: '', description: '', specs: '' });
         setEditingProduct(null);
         setIsCreating(false);
     };
@@ -254,12 +255,13 @@ const AdminDashboard = () => {
                                     </div>
 
                                     <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <InputField label="Product Name" value={formData.name} onChange={v => setFormData({...formData, name: v})} placeholder="e.g. ShadowBlade X1" />
-                                        <InputField label="Brand Name" value={formData.brand} onChange={v => setFormData({...formData, brand: v})} placeholder="e.g. ShadowGrid" />
-                                        <InputField label="Product Category" value={formData.category} onChange={v => setFormData({...formData, category: v})} placeholder="e.g. Keyboards" />
+                                        <InputField label="Product Title" value={formData.name} onChange={v => setFormData({...formData, name: v})} placeholder="e.g. ShadowBlade X1" />
+                                        <InputField label="Brand" value={formData.brand} onChange={v => setFormData({...formData, brand: v})} placeholder="e.g. ShadowGrid" />
+                                        <InputField label="Category" value={formData.category} onChange={v => setFormData({...formData, category: v})} placeholder="e.g. Keyboards" />
+                                        <InputField label="Inventory Count" type="number" value={formData.stock} onChange={v => setFormData({...formData, stock: v})} placeholder="0" />
                                         <div className="grid grid-cols-2 gap-4">
-                                            <InputField label="Retail Price ($)" type="number" value={formData.price} onChange={v => setFormData({...formData, price: v})} placeholder="0.00" />
-                                            <InputField label="Stock Level" type="number" value={formData.stock} onChange={v => setFormData({...formData, stock: v})} placeholder="0" />
+                                            <InputField label="Sale Price ($)" type="number" value={formData.price} onChange={v => setFormData({...formData, price: v})} placeholder="0.00" />
+                                            <InputField label="List Price ($) - Optional" type="number" value={formData.originalPrice} onChange={v => setFormData({...formData, originalPrice: v})} placeholder="0.00" />
                                         </div>
                                         <div className="md:col-span-2">
                                             <InputField label="Specifications (Comma separated)" value={Array.isArray(formData.specs) ? formData.specs.join(', ') : formData.specs} onChange={v => setFormData({...formData, specs: v})} placeholder="e.g. RGB, Mechanical, Wireless" />
@@ -337,6 +339,7 @@ const AdminDashboard = () => {
                                                                         brand: product.brand,
                                                                         category: product.category,
                                                                         price: product.price,
+                                                                        originalPrice: product.originalPrice || '',
                                                                         stock: product.stock,
                                                                         imageURL: product.imageURL,
                                                                         description: product.description,
