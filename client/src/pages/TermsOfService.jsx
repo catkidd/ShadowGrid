@@ -9,40 +9,39 @@ const TermsOfService = () => {
                     <p className="text-white/40 font-mono text-sm uppercase tracking-widest">Effective Date: May 2026</p>
                 </div>
             </FadeInUp>
-            
             <div className="space-y-12 text-white/70 font-medium leading-relaxed">
                 <FadeInUp delay={100}>
                     <section>
-                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">1. User Conduct</h2>
+                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">1. Use of Services</h2>
                         <p>
-                            By accessing the ShadowGrid, you agree to utilize our hardware interfaces for authorized purposes only. Any attempt to reverse-engineer, exploit, scrape, or disrupt the grid architecture will result in immediate termination of access and potential legal action. Maintain the integrity of the network.
+                            By accessing the ShadowGrid platform, you agree to use our services for lawful purposes only. Unauthorized use, including reverse-engineering, data scraping, or attempting to disrupt the site infrastructure, is strictly prohibited. Violation of these terms may result in account termination and legal action.
                         </p>
                     </section>
                 </FadeInUp>
 
                 <FadeInUp delay={200}>
                     <section>
-                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">2. Shipping and Delivery</h2>
+                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">2. Shipping & Risk of Loss</h2>
                         <p>
-                            Physical peripherals are dispatched globally from our automated fulfillment centers. Delivery timelines vary based on your geographic sector. ShadowGrid is not liable for delays caused by local customs protocols, carrier issues, or inter-sector transit anomalies. Once a package is handed to the carrier, risk of loss transfers to the buyer.
+                            Products are shipped from our fulfillment centers to addresses globally. Delivery timelines are estimates and are not guaranteed. ShadowGrid is not responsible for delays caused by customs, carrier issues, or incorrect address information. Risk of loss and title for products pass to you upon delivery to the carrier.
                         </p>
                     </section>
                 </FadeInUp>
 
                 <FadeInUp delay={300}>
                     <section>
-                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">3. Hardware Warranty</h2>
+                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">3. Limited Product Warranty</h2>
                         <p>
-                            All tech products are backed by our standard 1-year operational warranty. This covers manufacturing defects and spontaneous component failure under normal operating conditions. It does NOT cover user-induced damage, improper modifications, water damage, or aesthetic wear and tear. Warranty claims must be submitted with original order credentials.
+                            All hardware products include a standard 1-year limited warranty covering manufacturing defects and hardware failure under normal use. This warranty does not cover accidental damage, unauthorized modifications, exposure to liquids, or normal wear and tear. Warranty claims require a valid proof of purchase.
                         </p>
                     </section>
                 </FadeInUp>
                 
                 <FadeInUp delay={400}>
                     <section>
-                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">4. Limitations of Liability</h2>
+                        <h2 className="text-xl font-bold text-neon mb-4 uppercase tracking-widest border-b border-white/10 pb-2">4. Limitation of Liability</h2>
                         <p>
-                            ShadowGrid shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use our products or services, including but not limited to lost data, lost profits, or business interruption.
+                            To the maximum extent permitted by law, ShadowGrid shall not be liable for any indirect, incidental, or consequential damages, including loss of profits, data, or business interruption, arising out of the use or inability to use our products or services.
                         </p>
                     </section>
                 </FadeInUp>
