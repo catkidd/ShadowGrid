@@ -70,9 +70,9 @@ const ProductDetail = () => {
                 <ArrowLeft size={16} /> Back to Catalog
             </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-                {/* Product Image Gallery (Sticky) */}
-                <div className="sticky top-32">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+                {/* Product Image Gallery (Sticky on Desktop) */}
+                <div className="lg:sticky lg:top-32">
                     <FadeInUp>
                         <div className="relative aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden glass-card group">
                             <img 
@@ -104,7 +104,7 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                             
-                            <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-none mb-6">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-tight lg:leading-none mb-6">
                                 {product.name}
                             </h1>
                             

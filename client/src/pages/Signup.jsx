@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, ArrowRight, ShieldCheck, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, ArrowRight, UserPlus, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
 

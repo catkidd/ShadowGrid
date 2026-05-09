@@ -601,12 +601,14 @@ const App = () => (
 
 const NavAuthLinks = () => {
     const { user, isAdmin } = useAuth();
-    if (!user) return <Link to="/login" className="text-white/70 hover:text-neon transition-colors text-xs font-black uppercase tracking-widest">Login</Link>;
     
     return (
         <>
-            {isAdmin && <Link to="/admin/dashboard" className="text-neon hover:text-white transition-colors text-xs font-black uppercase tracking-widest">Admin</Link>}
             <Link to="/about" className="text-white/70 hover:text-neon transition-colors text-xs font-black uppercase tracking-widest">About</Link>
+            {isAdmin && <Link to="/admin/dashboard" className="text-neon hover:text-white transition-colors text-xs font-black uppercase tracking-widest">Admin</Link>}
+            {!user ? (
+                <Link to="/login" className="text-white/70 hover:text-neon transition-colors text-xs font-black uppercase tracking-widest">Login</Link>
+            ) : null}
         </>
     );
 };
@@ -637,7 +639,7 @@ const MobileNavAuthLinks = ({ closeMenu }) => {
     const { user, isAdmin } = useAuth();
     return (
         <>
-            <Link to="/about" className="text-white/60 hover:text-[#8B5CF6] transition-colors py-2" onClick={closeMenu}>About</Link>
+            <Link to="/about" className="text-white/60 hover:text-neon transition-colors py-2" onClick={closeMenu}>About</Link>
             {isAdmin && <Link to="/admin/dashboard" className="text-neon hover:text-white transition-colors py-2" onClick={closeMenu}>Admin</Link>}
             {!user && <Link to="/login" className="text-white hover:text-neon transition-colors py-2" onClick={closeMenu}>Login</Link>}
         </>
