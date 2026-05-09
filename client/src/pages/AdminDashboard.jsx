@@ -4,6 +4,7 @@ import {
     Plus, Edit, Trash2, LayoutDashboard, Package, 
     Save, X, AlertCircle, CheckCircle2 
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
 
 const AdminDashboard = () => {
@@ -12,7 +13,6 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [editingProduct, setEditingProduct] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
-    const [message, setMessage] = useState(null);
 
     const [formData, setFormData] = useState({
         name: '', brand: '', category: '', price: '', stock: '', imageURL: '', description: '', specs: ''
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
             const data = await response.json();
             setProducts(data);
         } catch {
-            setMessage({ type: 'error', text: 'Connection error. Registration portal offline.' });
+            toast.error('Connection error. Registration portal offline.');
         } finally {
             setLoading(false);
         }
@@ -51,17 +51,16 @@ const AdminDashboard = () => {
             });
 
             if (response.ok) {
-                setMessage({ type: 'success', text: 'Operation protocol successful' });
+                toast.success('Operation protocol successful');
                 fetchProducts();
                 resetForm();
             } else {
                 const errData = await response.json();
-                setMessage({ type: 'error', text: errData.message || 'Operation failure' });
+                toast.error(errData.message || 'Operation failure');
             }
         } catch {
-            setMessage({ type: 'error', text: 'Neural link interrupted' });
+            toast.error('Neural link interrupted');
         }
-        setTimeout(() => setMessage(null), 3000);
     };
 
     const handleSubmit = (e) => {
@@ -107,14 +106,6 @@ const AdminDashboard = () => {
                     </button>
                 </div>
 
-                {message && (
-                    <div className={`fixed top-24 right-8 z-50 p-4 rounded-xl border flex items-center gap-3 font-mono text-xs uppercase tracking-widest animate-in slide-in-from-right ${
-                        message.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
-                    }`}>
-                        {message.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
-                        {message.text}
-                    </div>
-                )}
 
                 {(isCreating || editingProduct) ? (
                     <div className="glass-card p-10 max-w-4xl mx-auto mb-16">

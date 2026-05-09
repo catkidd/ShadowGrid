@@ -2,20 +2,19 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Zap, Mail, Lock, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         setIsSubmitting(true);
 
             try {
@@ -30,13 +29,14 @@ const Login = () => {
             const data = await response.json();
 
             if (response.ok) {
+                toast.success('Access Granted. Welcome back.');
                 login(data.user, data.token);
                 navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/');
             } else {
-                setError(data.message || 'Login failed');
+                toast.error(data.message || 'Access Denied.');
             }
         } catch {
-            setError('Connection error. Grid access unavailable.');
+            toast.error('Connection error. Grid access unavailable.');
         } finally {
             setIsSubmitting(false);
         }
@@ -53,12 +53,6 @@ const Login = () => {
                     <h1 className="text-3xl font-black uppercase tracking-tighter mb-2 italic">Account Login</h1>
                     <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-10">Sign in to your account</p>
 
-                    {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg mb-8 text-xs font-mono uppercase tracking-wider flex items-center gap-3">
-                            <ShieldCheck size={16} />
-                            {error}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">

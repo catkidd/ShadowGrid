@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, ArrowRight, ShieldCheck, UserPlus, Eye, EyeOff } from 'lucide-react';
+import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
 
 const Signup = () => {
@@ -9,17 +10,15 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
 
         if (password !== confirmPassword) {
-            return setError('Access protocols do not match.');
+            return toast.error('Access protocols do not match.');
         }
 
         setIsSubmitting(true);
@@ -36,13 +35,14 @@ const Signup = () => {
             const data = await response.json();
 
             if (response.ok) {
+                toast.success('Neural link established. Welcome to ShadowGrid.');
                 login(data.user, data.token);
                 navigate('/');
             } else {
-                setError(data.message || 'Registration failed');
+                toast.error(data.message || 'Registration failure');
             }
         } catch {
-            setError('Connection error. Registration portal offline.');
+            toast.error('Connection error. Registration portal offline.');
         } finally {
             setIsSubmitting(false);
         }
@@ -59,12 +59,6 @@ const Signup = () => {
                     <h1 className="text-3xl font-black uppercase tracking-tighter mb-2 italic">Create Account</h1>
                     <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-10">Join the ShadowGrid member network</p>
 
-                    {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg mb-8 text-xs font-mono uppercase tracking-wider flex items-center gap-3">
-                            <ShieldCheck size={16} />
-                            {error}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
