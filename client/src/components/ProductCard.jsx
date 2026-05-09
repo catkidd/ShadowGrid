@@ -8,13 +8,18 @@ const ProductCard = ({ product }) => {
     return (
         <div className="glass-card group relative flex flex-col h-full transition-all duration-300 hover:-translate-y-2 border border-transparent hover:border-neon/50">
             {/* Discount Badge */}
-            {product.originalPrice && product.originalPrice > product.price && (
-                <div className="absolute top-4 right-4 z-10">
-                    <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-red-500 text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
-                        -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                    </span>
-                </div>
-            )}
+            {(() => {
+                const discount = product.originalPrice && product.originalPrice > product.price 
+                    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
+                    : 0;
+                return discount > 0 ? (
+                    <div className="absolute top-4 right-4 z-10">
+                        <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-red-500 text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
+                            -{discount}% OFF
+                        </span>
+                    </div>
+                ) : null;
+            })()}
 
             {/* Image Container */}
             <Link to={`/product/${product._id}`} className="relative aspect-[4/3] overflow-hidden block">

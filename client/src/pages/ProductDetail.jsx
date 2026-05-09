@@ -115,16 +115,21 @@ const ProductDetail = () => {
 
                             <div className="flex items-center gap-6">
                                 <div className="flex flex-col">
-                                    {product.originalPrice && product.originalPrice > product.price && (
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-lg text-white/30 line-through font-mono">
-                                                ${product.originalPrice}
-                                            </span>
-                                            <span className="text-xs font-black bg-red-500 text-white px-2 py-0.5 rounded animate-pulse">
-                                                -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                                            </span>
-                                        </div>
-                                    )}
+                                    {(() => {
+                                        const discount = product.originalPrice && product.originalPrice > product.price 
+                                            ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
+                                            : 0;
+                                        return discount > 0 ? (
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-lg text-white/30 line-through font-mono">
+                                                    ${product.originalPrice}
+                                                </span>
+                                                <span className="text-xs font-black bg-red-500 text-white px-2 py-0.5 rounded animate-pulse">
+                                                    -{discount}%
+                                                </span>
+                                            </div>
+                                        ) : null;
+                                    })()}
                                     <span className="text-5xl font-mono font-black text-white">
                                         ${product.price}
                                     </span>
