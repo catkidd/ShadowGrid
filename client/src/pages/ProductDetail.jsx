@@ -115,7 +115,7 @@ const ProductDetail = () => {
 
                             <div className="flex items-center gap-6">
                                 <div className="flex flex-col">
-                                    {product.originalPrice && (
+                                    {product.originalPrice && product.originalPrice > product.price && (
                                         <div className="flex items-center gap-3">
                                             <span className="text-lg text-white/30 line-through font-mono">
                                                 ${product.originalPrice}

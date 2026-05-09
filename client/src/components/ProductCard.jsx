@@ -8,7 +8,7 @@ const ProductCard = ({ product }) => {
     return (
         <div className="glass-card group relative flex flex-col h-full transition-all duration-300 hover:-translate-y-2 border border-transparent hover:border-neon/50">
             {/* Discount Badge */}
-            {product.originalPrice && (
+            {product.originalPrice && product.originalPrice > product.price && (
                 <div className="absolute top-4 right-4 z-10">
                     <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-red-500 text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
                         -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
@@ -41,7 +41,7 @@ const ProductCard = ({ product }) => {
                         <p className="text-white/50 text-sm">{product.brand}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                        {product.originalPrice && (
+                        {product.originalPrice && product.originalPrice > product.price && (
                             <span className="text-xs text-white/30 line-through font-mono">
                                 ${product.originalPrice}
                             </span>
