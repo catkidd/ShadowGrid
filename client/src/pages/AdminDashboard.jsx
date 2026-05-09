@@ -18,7 +18,7 @@ const AdminDashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [formData, setFormData] = useState({
-        name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', stock: '', imageURL: '', description: '', specs: ''
+        name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', sku: '', stock: '', imageURL: '', description: '', specs: ''
     });
 
     // Mock Orders for demonstration
@@ -113,7 +113,7 @@ const AdminDashboard = () => {
     };
 
     const resetForm = () => {
-        setFormData({ name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', stock: '', imageURL: '', description: '', specs: '' });
+        setFormData({ name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', sku: '', stock: '', imageURL: '', description: '', specs: '' });
         setEditingProduct(null);
         setIsCreating(false);
     };
@@ -260,6 +260,7 @@ const AdminDashboard = () => {
                                         <InputField label="Product Title" value={formData.name} onChange={v => setFormData({...formData, name: v})} placeholder="e.g. ShadowBlade X1" />
                                         <InputField label="Brand" value={formData.brand} onChange={v => setFormData({...formData, brand: v})} placeholder="e.g. ShadowGrid" />
                                         <InputField label="Category" value={formData.category} onChange={v => setFormData({...formData, category: v})} placeholder="e.g. Keyboards" />
+                                        <InputField label="SKU (Unique)" value={formData.sku} onChange={v => setFormData({...formData, sku: v})} placeholder="e.g. SG-KB-001" />
                                         <InputField label="Inventory Count" type="number" value={formData.stock} onChange={v => setFormData({...formData, stock: v})} placeholder="0" />
                                         <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <InputField label="Sale Price ($)" type="number" value={formData.price} onChange={v => setFormData({...formData, price: v})} placeholder="0.00" />

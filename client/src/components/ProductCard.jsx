@@ -65,13 +65,12 @@ const ProductCard = ({ product }) => {
                     <span className={`text-xs font-medium ${product.stock < 10 ? 'text-orange-400' : 'text-emerald-400'}`}>
                         {product.stock} Units left
                     </span>
-                    
                     <button 
                         onClick={() => addToCart(product)}
                         className="flex items-center gap-2 bg-white/10 hover:bg-neon hover:text-charcoal px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300"
                     >
                         <Plus size={14} />
-                        Add to Grid
+                        Add to Cart
                     </button>
                 </div>
             </div>

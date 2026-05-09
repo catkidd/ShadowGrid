@@ -80,7 +80,7 @@ const Home = ({ preFilter = 'All' }) => {
                             <div className="max-w-3xl">
                                 <div className="flex items-center gap-2 mb-4">
                                     <span className="w-12 h-[1px] bg-neon" />
-                                    <span className="text-neon text-xs font-black uppercase tracking-[0.3em]">Hardware Protocol v4.0</span>
+                                    <span className="text-neon text-xs font-black uppercase tracking-[0.3em]">Premium Hardware Collection</span>
                                 </div>
                                 <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-8">
                                     PRECISION <br />
@@ -94,14 +94,14 @@ const Home = ({ preFilter = 'All' }) => {
                                         onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
                                         className="px-8 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-xs rounded-lg neon-glow flex items-center gap-2 group"
                                     >
-                                        Explore The Grid
+                                        Shop Catalog
                                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                     </button>
                                     <Link 
                                         to="/protocols"
                                         className="px-8 py-4 bg-white/5 border border-white/10 hover:border-white/30 text-white font-black uppercase tracking-widest text-xs rounded-lg transition-all"
                                     >
-                                        Documentation
+                                        Support
                                     </Link>
                                 </div>
                             </div>
@@ -116,10 +116,10 @@ const Home = ({ preFilter = 'All' }) => {
                     <div className="container mx-auto px-6">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                             {[
-                                { icon: <ShoppingBag size={24} />, title: "Quantum Delivery", desc: "Same-day grid dispatch" },
-                                { icon: <ShieldCheck size={24} />, title: "Verified Secure", desc: "Military-grade encryption" },
-                                { icon: <Zap size={24} />, title: "Hyper Support", desc: "24/7 technical oversight" },
-                                { icon: <Layers size={24} />, title: "Global Network", desc: "Nodes in 50+ territories" }
+                                { icon: <ShoppingBag size={24} />, title: "Fast Shipping", desc: "Same-day dispatch" },
+                                { icon: <ShieldCheck size={24} />, title: "Secure Payment", desc: "SSL encrypted checkout" },
+                                { icon: <Zap size={24} />, title: "Expert Support", desc: "24/7 technical assistance" },
+                                { icon: <Layers size={24} />, title: "Global Warranty", desc: "Available in 50+ countries" }
                             ].map((item, i) => (
                                 <FadeInUp key={i} delay={i * 100}>
                                     <div className="flex items-center gap-4 group cursor-default">
@@ -143,8 +143,8 @@ const Home = ({ preFilter = 'All' }) => {
                 <section className="py-24 relative overflow-hidden">
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-16">
-                            <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4">Sync Your Setup</h3>
-                            <p className="text-white/40 font-mono text-sm uppercase tracking-widest">Select your operational segment</p>
+                            <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4">Shop by Category</h3>
+                            <p className="text-white/40 font-mono text-sm uppercase tracking-widest">Select your equipment category</p>
                         </div>
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
@@ -176,14 +176,14 @@ const Home = ({ preFilter = 'All' }) => {
                         <div className="relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 group">
                             <div className="grid md:grid-cols-2 items-center">
                                 <div className="p-12 lg:p-20 relative z-10">
-                                    <span className="inline-block px-4 py-1 bg-red-600 text-[10px] font-black uppercase tracking-widest rounded-full mb-6 animate-pulse">Critical Alert</span>
+                                    <span className="inline-block px-4 py-1 bg-red-600 text-[10px] font-black uppercase tracking-widest rounded-full mb-6 animate-pulse">Limited Offer</span>
                                     <h3 className="text-5xl lg:text-7xl font-black tracking-tighter uppercase italic leading-none mb-6">
                                         Save up to <br />
                                         <span className="text-neon text-6xl lg:text-9xl">$150</span>
                                     </h3>
-                                    <p className="text-xl text-white/60 mb-10 max-w-md font-medium">On selected experimental hardware and neural interface peripherals. Limited grid access available.</p>
+                                    <p className="text-xl text-white/60 mb-10 max-w-md font-medium">On selected high-performance peripherals and accessories. Limited stock available.</p>
                                     <Link to="/keyboards" className="px-10 py-5 bg-white text-charcoal font-black uppercase tracking-widest text-xs rounded-lg hover:bg-neon hover:text-charcoal transition-all inline-block">
-                                        Initiate Protocol
+                                        Shop the Collection
                                     </Link>
                                 </div>
                                 <div className="relative h-full min-h-[400px] overflow-hidden">
@@ -327,7 +327,7 @@ const Layout = ({ children }) => {
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search the grid..."
+                                placeholder="Search products..."
                                 className="bg-transparent border-none outline-none text-[10px] font-mono text-white w-full py-2"
                                 autoFocus={isSearchVisible}
                             />
@@ -386,7 +386,7 @@ const Layout = ({ children }) => {
                 <div className="container mx-auto px-6 relative z-10 text-center">
                     <FadeInUp>
                         <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4">Newsletter</h3>
-                        <p className="text-white/60 mb-10 max-w-lg mx-auto font-medium">Join 50,000+ members. Receive updates on new product drops and maintenance.</p>
+                        <p className="text-white/60 mb-10 max-w-lg mx-auto font-medium">Join 50,000+ members. Receive updates on new product launches and special offers.</p>
                         <form className="max-w-2xl mx-auto" onSubmit={(e) => e.preventDefault()}>
                             <div className="flex flex-col md:flex-row gap-4 mb-6">
                                 <div className="flex-1 relative">
@@ -410,7 +410,7 @@ const Layout = ({ children }) => {
                                     <div className="w-4 h-4 border border-white/20 rounded peer-checked:bg-neon peer-checked:border-neon transition-all flex items-center justify-center">
                                         <Check size={12} className="text-charcoal opacity-0 peer-checked:opacity-100" />
                                     </div>
-                                    <span className="group-hover:text-white/60 transition-colors italic">I accept the grid transmission terms</span>
+                                    <span className="group-hover:text-white/60 transition-colors italic">I accept the terms and conditions</span>
                                 </label>
                             </div>
                         </form>
@@ -446,7 +446,7 @@ const Layout = ({ children }) => {
                         </p>
                     </div>
                     <div>
-                        <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-neon mb-6">Operational Hub</h5>
+                        <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-neon mb-6">Support Hub</h5>
                         <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-white/50">
                             <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
                             <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
@@ -455,21 +455,21 @@ const Layout = ({ children }) => {
                         </ul>
                     </div>
                     <div>
-                        <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-neon mb-6">Security & Policy</h5>
+                        <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-neon mb-6">Company Policy</h5>
                         <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-white/50">
-                            <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Protocol</Link></li>
+                            <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
                             <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
                             <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping & Returns</Link></li>
                             <li><Link to="/payments" className="hover:text-white transition-colors">Payment Methods</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-neon mb-6">Terminal</h5>
+                        <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-neon mb-6">Categories</h5>
                         <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-white/50">
-                            <li><Link to="/" className="hover:text-white transition-colors">Nexus Grid</Link></li>
-                            <li><Link to="/keyboards" className="hover:text-white transition-colors">Input Systems</Link></li>
-                            <li><Link to="/precision" className="hover:text-white transition-colors">Precision Tools</Link></li>
-                            <li><Link to="/displays" className="hover:text-white transition-colors">Visual Arrays</Link></li>
+                            <li><Link to="/" className="hover:text-white transition-colors">All Products</Link></li>
+                            <li><Link to="/keyboards" className="hover:text-white transition-colors">Keyboards</Link></li>
+                            <li><Link to="/precision" className="hover:text-white transition-colors">Mice</Link></li>
+                            <li><Link to="/displays" className="hover:text-white transition-colors">Displays</Link></li>
                         </ul>
                     </div>
                 </div>
@@ -478,7 +478,7 @@ const Layout = ({ children }) => {
                 <div className="container mx-auto px-6 mt-20 pt-8 border-t border-white/5">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         <div className="flex flex-col gap-6">
-                            <p className="text-xs font-mono text-white/60 uppercase tracking-[0.3em] mb-2 border-l-2 border-neon pl-4">We Accept Secure Grid Payments</p>
+                            <p className="text-xs font-mono text-white/60 uppercase tracking-[0.3em] mb-2 border-l-2 border-neon pl-4">Secure Checkout Powered by SSL</p>
                             <div className="flex items-center gap-10">
                                 <div className="opacity-80 hover:opacity-100 hover:scale-110 transition-all duration-300">
                                     <img src="https://api.iconify.design/logos:visa.svg" className="h-8 md:h-10 w-auto" alt="Visa" />
@@ -497,8 +497,8 @@ const Layout = ({ children }) => {
                         <div className="flex flex-col items-center md:items-end gap-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">
                             <p>© 2026 ShadowGrid Ops. All Rights Reserved.</p>
                             <div className="flex gap-8">
-                                <Link to="/privacy" className="hover:text-neon transition-colors">Privacy_Protocol</Link>
-                                <Link to="/terms" className="hover:text-neon transition-colors">Terms_Of_Service</Link>
+                                <Link to="/privacy" className="hover:text-neon transition-colors">Privacy Policy</Link>
+                                <Link to="/terms" className="hover:text-neon transition-colors">Terms of Service</Link>
                             </div>
                         </div>
                     </div>
@@ -512,7 +512,7 @@ const Layout = ({ children }) => {
 
 const ProtectedRoute = ({ children }) => {
     const { isAdmin, loading } = useAuth();
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-neon font-mono uppercase tracking-[0.3em]">Authenticating...</div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center text-neon font-mono uppercase tracking-[0.3em]">Checking Authorization...</div>;
     if (!isAdmin) return <Navigate to="/login" replace />;
     return children;
 };

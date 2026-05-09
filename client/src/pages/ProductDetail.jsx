@@ -43,7 +43,7 @@ const ProductDetail = () => {
             <div className="container mx-auto px-6 py-20 min-h-[60vh] flex items-center justify-center">
                 <div className="animate-pulse flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-t-2 border-neon rounded-full animate-spin" />
-                    <p className="text-neon font-mono uppercase tracking-widest text-xs">Accessing Grid Data...</p>
+                    <p className="text-neon font-mono uppercase tracking-widest text-xs">Loading Product Details...</p>
                 </div>
             </div>
         );
@@ -54,10 +54,10 @@ const ProductDetail = () => {
             <div className="container mx-auto px-6 py-20 min-h-[60vh] flex flex-col items-center justify-center">
                 <div className="glass-card p-12 text-center max-w-md w-full">
                     <Zap className="mx-auto text-orange-500 mb-4" size={48} />
-                    <h2 className="text-2xl font-black uppercase italic tracking-tighter mb-2">Error 404</h2>
-                    <p className="text-white/50 mb-8">Hardware signature not recognized on this grid segment.</p>
+                    <h2 className="text-2xl font-black uppercase italic tracking-tighter mb-2">Product Not Found</h2>
+                    <p className="text-white/50 mb-8">The requested item could not be found in our database.</p>
                     <Link to="/" className="inline-flex items-center gap-2 text-neon hover:text-white transition-colors font-bold uppercase tracking-widest text-xs">
-                        <ArrowLeft size={16} /> Return to Grid
+                        <ArrowLeft size={16} /> Return to Shop
                     </Link>
                 </div>
             </div>
@@ -137,7 +137,7 @@ const ProductDetail = () => {
 
                         {/* Specs */}
                         <div className="mb-10">
-                            <h3 className="text-lg font-bold uppercase tracking-widest mb-6">Hardware Specifications</h3>
+                            <h3 className="text-lg font-bold uppercase tracking-widest mb-6">Product Specifications</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {product.specs?.map((spec, i) => (
                                     <div key={i} className="glass-card p-4 flex items-center gap-4">
@@ -164,14 +164,14 @@ const ProductDetail = () => {
                                 {added ? (
                                     <>
                                         <Check size={20} />
-                                        Protocol Confirmed
+                                        Added to Cart
                                     </>
                                 ) : product.stock === 0 ? (
-                                    'Depleted'
+                                    'Out of Stock'
                                 ) : (
                                     <>
                                         <Plus size={20} />
-                                        Initialize Grid Upload
+                                        Add to Cart
                                     </>
                                 )}
                             </button>
@@ -201,13 +201,13 @@ const ProductDetail = () => {
                             </div>
                             <div className="p-6 text-sm text-white/70 leading-relaxed font-mono">
                                 {activeTab === 'delivery' && (
-                                    <p>Free encrypted shipping across all nodes. Express Node Delivery available at checkout for next-day deployment. All packages are securely sealed with tamper-evident protocol tape.</p>
+                                    <p>Free standard shipping on all orders. Express delivery options are available at checkout. All items are shipped in premium, protective packaging.</p>
                                 )}
                                 {activeTab === 'returns' && (
-                                    <p>30-day hassle-free return policy. If the hardware does not meet your synchronization standards, initiate a return protocol through your terminal for a full refund. Items must be in original condition.</p>
+                                    <p>30-day hassle-free return policy. If you are not completely satisfied with your purchase, you can initiate a return through your account dashboard for a full refund.</p>
                                 )}
                                 {activeTab === 'warranty' && (
-                                    <p>2-Year Hardware Defect Warranty included. Covers internal component failure and sensor degradation. Accidental damage or unauthorized disassembly will void the warranty matrix.</p>
+                                    <p>2-Year Manufacturer Warranty included. Covers internal component defects and hardware failures under normal usage conditions.</p>
                                 )}
                             </div>
                         </div>
@@ -233,8 +233,8 @@ const ProductDetail = () => {
 
                     {/* Reviews List */}
                     <div className="md:col-span-2 space-y-6">
-                        {product.reviews && product.reviews.length > 0 ? (
-                            product.reviews.map((review, idx) => (
+                        {product?.reviews && product?.reviews.length > 0 ? (
+                            product?.reviews.map((review, idx) => (
                                 <div key={idx} className="glass-card p-6 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
@@ -257,7 +257,7 @@ const ProductDetail = () => {
                             ))
                         ) : (
                             <div className="glass-card p-8 rounded-xl text-center border border-white/5">
-                                <p className="text-white/40 font-mono text-sm uppercase tracking-widest">No reviews synchronized for this hardware yet.</p>
+                                <p className="text-white/40 font-mono text-sm uppercase tracking-widest">No reviews for this product yet.</p>
                             </div>
                         )}
                     </div>

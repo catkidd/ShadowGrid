@@ -44,7 +44,7 @@ const About = () => {
                                 </div>
                                 <h3 className="text-xl font-bold uppercase tracking-widest text-white mb-4 font-mono">Quality</h3>
                                 <p className="text-white/60 font-mono text-sm leading-relaxed">
-                                    Uncompromising tactile feedback and pixel-perfect accuracy. Every switch and sensor is vetted for peak human-machine interaction.
+                                    Uncompromising tactile feedback and pixel-perfect accuracy. Every switch and sensor is vetted for peak user-device interaction.
                                 </p>
                             </div>
                         </FadeInUp>
@@ -68,7 +68,7 @@ const About = () => {
                                 </div>
                                 <h3 className="text-xl font-bold uppercase tracking-widest text-white mb-4 font-mono">Community</h3>
                                 <p className="text-white/60 font-mono text-sm leading-relaxed">
-                                    We build for those who know. An exclusive network of developers, designers, and digital operators pushing limits.
+                                    We build for those who know. An exclusive network of developers, designers, and professionals pushing limits.
                                 </p>
                             </div>
                         </FadeInUp>
@@ -118,8 +118,8 @@ const About = () => {
                                 />
                             </div>
                             <div>
-                                <h3 className="text-sm text-neon font-bold uppercase tracking-widest mb-2 font-mono">The Architect</h3>
-                                <h2 className="text-3xl font-black text-white italic tracking-tight mb-4">Operations Command</h2>
+                                <h3 className="text-sm text-neon font-bold uppercase tracking-widest mb-2 font-mono">The Founder</h3>
+                                <h2 className="text-3xl font-black text-white italic tracking-tight mb-4">Founder's Vision</h2>
                                 <p className="text-white/70 font-mono text-sm leading-relaxed mb-6">
                                     "We didn't set out to make just another peripheral brand. We wanted to build the tools we couldn't find anywhere else. The kind of gear that disappears into your workflow because it's precisely calibrated to human intuition."
                                 </p>

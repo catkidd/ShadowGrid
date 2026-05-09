@@ -18,7 +18,7 @@ const Signup = () => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            return toast.error('Access protocols do not match.');
+            return toast.error('Passwords do not match.');
         }
 
         setIsSubmitting(true);
@@ -35,14 +35,14 @@ const Signup = () => {
             const data = await response.json();
 
             if (response.ok) {
-                toast.success('Neural link established. Welcome to ShadowGrid.');
+                toast.success('Account created successfully. Welcome to ShadowGrid.');
                 login(data.user, data.token);
                 navigate('/');
             } else {
-                toast.error(data.message || 'Registration failure');
+                toast.error(data.message || 'Sign up failed');
             }
         } catch {
-            toast.error('Connection error. Registration portal offline.');
+            toast.error('Connection error. Registration server offline.');
         } finally {
             setIsSubmitting(false);
         }
@@ -56,8 +56,8 @@ const Signup = () => {
                         <UserPlus className="text-neon animate-pulse" size={24} />
                     </div>
                     
-                    <h1 className="text-3xl font-black uppercase tracking-tighter mb-2 italic">Create Account</h1>
-                    <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-10">Join the ShadowGrid member network</p>
+                    <h1 className="text-3xl font-black uppercase tracking-tighter mb-2 italic">Sign Up</h1>
+                    <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-10">Create your ShadowGrid account</p>
 
 
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -119,9 +119,9 @@ const Signup = () => {
                                 isSubmitting ? 'bg-white/5 text-white/20' : 'bg-neon text-charcoal hover:bg-white neon-glow'
                             }`}
                         >
-                            {isSubmitting ? 'Creating Account...' : (
+                            {isSubmitting ? 'Signing Up...' : (
                                 <>
-                                    Create Account
+                                    Sign Up
                                     <ArrowRight size={16} />
                                 </>
                             )}
@@ -130,7 +130,7 @@ const Signup = () => {
 
                     <div className="mt-12 pt-8 border-t border-white/5 text-center">
                         <p className="text-white/40 text-xs font-mono uppercase tracking-widest">
-                            Already Registered? <Link to="/login" className="text-neon hover:text-white transition-colors ml-2 underline underline-offset-4">Sign In</Link>
+                            Already Registered? <Link to="/login" className="text-neon hover:text-white transition-colors ml-2 underline underline-offset-4">Login</Link>
                         </p>
                     </div>
                 </div>

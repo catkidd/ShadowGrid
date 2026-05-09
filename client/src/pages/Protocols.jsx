@@ -6,8 +6,8 @@ const Protocols = () => {
         <main className="container mx-auto px-6 py-20 max-w-6xl flex-1 bg-[#0A0A0A]">
             <FadeInUp>
                 <div className="mb-12 border-b border-white/10 pb-8">
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic mb-4 font-mono text-white">Protocols</h1>
-                    <p className="text-white/40 font-mono text-sm uppercase tracking-widest">Technical Library & Documentation</p>
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic mb-4 font-mono text-white">Support Center</h1>
+                    <p className="text-white/40 font-mono text-sm uppercase tracking-widest">Hardware Support & Documentation Library</p>
                 </div>
             </FadeInUp>
 

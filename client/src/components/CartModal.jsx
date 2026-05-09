@@ -14,9 +14,9 @@ const CartModal = ({ isOpen, onClose }) => {
             <div className="relative w-full max-w-md h-full bg-matte border-l border-white/10 flex flex-col shadow-2xl animate-slide-in">
                 {/* Header */}
                 <div className="p-6 border-b border-white/5 flex justify-between items-center bg-charcoal">
-                    <h2 className="text-xl font-bold tracking-tighter flex items-center gap-2">
+                    <h2 className="text-xl font-bold tracking-tighter flex items-center gap-2 text-white">
                         <ShoppingBag className="text-neon" size={20} />
-                        CURRENT GRID
+                        YOUR CART
                     </h2>
                     <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors">
                         <X size={20} />
@@ -28,41 +28,41 @@ const CartModal = ({ isOpen, onClose }) => {
                     {cart.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-white/30 space-y-4">
                             <ShoppingBag size={48} strokeWidth={1} />
-                            <p className="font-mono text-sm uppercase tracking-widest">Grid is Empty</p>
+                            <p className="font-mono text-sm uppercase tracking-widest text-white/30">Your Cart is Empty</p>
                         </div>
                     ) : (
                         cart.map((item) => (
                             <div key={item._id} className="flex gap-4 group">
                                 <div className="w-20 h-20 bg-charcoal rounded-lg overflow-hidden border border-white/5">
-                                    <img src={item.imageURL} alt={item.name} className="w-full h-full object-cover" />
+                                    <img src={item?.imageURL} alt={item?.name} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-grow">
                                     <div className="flex justify-between">
-                                        <h4 className="font-bold text-sm group-hover:text-neon transition-colors">{item.name}</h4>
+                                        <h4 className="font-bold text-sm group-hover:text-neon transition-colors">{item?.name}</h4>
                                         <button onClick={() => removeFromCart(item._id)} className="text-white/30 hover:text-red-400 transition-colors">
                                             <Trash2 size={14} />
                                         </button>
                                     </div>
-                                    <p className="text-neon font-mono text-xs mb-3">${item.price}</p>
+                                    <p className="text-neon font-mono text-xs mb-3">${item?.price}</p>
                                     
                                     <div className="flex items-center gap-3">
                                         <div className="flex items-center border border-white/10 rounded-md bg-charcoal">
                                             <button 
-                                                onClick={() => updateQuantity(item._id, -1, item.stock)}
+                                                onClick={() => updateQuantity(item?._id, -1, item?.stock)}
                                                 className="p-1 hover:text-neon transition-colors"
                                             >
                                                 <Minus size={12} />
                                             </button>
                                             <span className="w-8 text-center text-xs font-mono">{item.quantity}</span>
                                             <button 
-                                                onClick={() => updateQuantity(item._id, 1, item.stock)}
+                                                onClick={() => updateQuantity(item?._id, 1, item?.stock)}
                                                 className="p-1 hover:text-neon transition-colors"
                                             >
                                                 <Plus size={12} />
                                             </button>
                                         </div>
                                         <span className="text-[10px] text-white/30 uppercase tracking-tighter">
-                                            Limit: {item.stock}
+                                            Limit: {item?.stock}
                                         </span>
                                     </div>
                                 </div>
@@ -80,13 +80,13 @@ const CartModal = ({ isOpen, onClose }) => {
                         </div>
                         <button className="w-full py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-sm rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 neon-glow">
                             <CreditCard size={18} />
-                            Initiate Transfer
+                            Checkout
                         </button>
                         <button 
                             onClick={clearCart}
                             className="w-full py-2 text-[10px] text-white/20 uppercase tracking-widest hover:text-red-400 transition-colors"
                         >
-                            Flush Cart Data
+                            Clear Cart
                         </button>
                     </div>
                 )}

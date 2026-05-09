@@ -29,14 +29,14 @@ const Login = () => {
             const data = await response.json();
 
             if (response.ok) {
-                toast.success('Access Granted. Welcome back.');
+                toast.success('Login successful. Welcome back.');
                 login(data.user, data.token);
                 navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/');
             } else {
-                toast.error(data.message || 'Access Denied.');
+                toast.error(data.message || 'Invalid credentials.');
             }
         } catch {
-            toast.error('Connection error. Grid access unavailable.');
+            toast.error('Connection error. Server offline.');
         } finally {
             setIsSubmitting(false);
         }
@@ -50,8 +50,8 @@ const Login = () => {
                         <Zap className="text-neon animate-pulse" size={24} />
                     </div>
                     
-                    <h1 className="text-3xl font-black uppercase tracking-tighter mb-2 italic">Account Login</h1>
-                    <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-10">Sign in to your account</p>
+                    <h1 className="text-3xl font-black uppercase tracking-tighter mb-2 italic">Login</h1>
+                    <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-10">Login to your account</p>
 
 
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -109,7 +109,7 @@ const Login = () => {
 
                     <div className="mt-12 pt-8 border-t border-white/5 text-center">
                         <p className="text-white/40 text-xs font-mono uppercase tracking-widest">
-                            New Member? <Link to="/signup" className="text-neon hover:text-white transition-colors ml-2 underline underline-offset-4">Create Account</Link>
+                            New Member? <Link to="/signup" className="text-neon hover:text-white transition-colors ml-2 underline underline-offset-4">Sign Up</Link>
                         </p>
                     </div>
                 </div>
