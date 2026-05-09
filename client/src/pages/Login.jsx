@@ -10,6 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ const Login = () => {
 
             if (response.ok) {
                 toast.success('Login successful. Welcome back.');
-                login(data.user, data.token);
+                login(data.user, data.token, rememberMe);
                 navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/');
             } else {
                 toast.error(data.message || 'Invalid credentials.');
@@ -90,6 +91,25 @@ const Login = () => {
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <label className="flex items-center gap-3 cursor-pointer group select-none">
+                                <div className="relative">
+                                    <input 
+                                        type="checkbox" 
+                                        className="hidden peer"
+                                        checked={rememberMe}
+                                        onChange={() => setRememberMe(!rememberMe)}
+                                    />
+                                    <div className="w-5 h-5 border border-white/10 rounded bg-white/5 peer-checked:bg-neon peer-checked:border-neon transition-all flex items-center justify-center">
+                                        <Zap size={10} className={`text-charcoal transition-opacity ${rememberMe ? 'opacity-100' : 'opacity-0'}`} fill="currentColor" />
+                                    </div>
+                                </div>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white/60 transition-colors">Remember Me</span>
+                            </label>
+                            
+                            <Link to="/contact" className="text-[10px] font-bold uppercase tracking-widest text-white/20 hover:text-neon transition-colors">Forgot Password?</Link>
                         </div>
 
                         <button 

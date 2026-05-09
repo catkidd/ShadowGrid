@@ -7,13 +7,14 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem('shadowgrid-token'));
+    const [token, setToken] = useState(() => localStorage.getItem('shadowgrid-token') || sessionStorage.getItem('shadowgrid-token'));
     const [loading, setLoading] = useState(true);
 
     const logout = () => {
         setToken(null);
         setUser(null);
         localStorage.removeItem('shadowgrid-token');
+        sessionStorage.removeItem('shadowgrid-token');
     };
 
     useEffect(() => {
@@ -48,10 +49,14 @@ export const AuthProvider = ({ children }) => {
         fetchUser();
     }, [token]);
 
-    const login = (userData, userToken) => {
+    const login = (userData, userToken, rememberMe = false) => {
         setToken(userToken);
         setUser(userData);
-        localStorage.setItem('shadowgrid-token', userToken);
+        if (rememberMe) {
+            localStorage.setItem('shadowgrid-token', userToken);
+        } else {
+            sessionStorage.setItem('shadowgrid-token', userToken);
+        }
     };
 
     return (
