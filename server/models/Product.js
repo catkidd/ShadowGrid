@@ -9,11 +9,13 @@ const reviewSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
+    sku: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     brand: { type: String, required: true },
     category: { type: String, required: true, enum: ['Keyboards', 'Mice', 'Displays'] },
-    price: { type: Number, required: true },
-    originalPrice: { type: Number },
+    price: { type: Number, required: true }, // List Price / Original Price
+    salePrice: { type: Number }, // Current Selling Price
+    originalPrice: { type: Number }, // Deprecated in favor of list/sale price but keeping for compatibility
     specs: [{ type: String }],
     stock: { type: Number, required: true },
     imageURL: { type: String, required: true },
