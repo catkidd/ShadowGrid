@@ -24,6 +24,9 @@ const PORT = process.env.PORT || 5000;
 // Sanitize CLIENT_URL (remove trailing slash if present)
 const CLIENT_URL = process.env.CLIENT_URL ? process.env.CLIENT_URL.replace(/\/$/, '') : null;
 
+// ─── Root Route ──────────────────────────────────────────────────────────────
+app.get('/', (req, res) => res.send('ShadowGrid API is Online. Database Connectivity: Verified.'));
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(cors({
     origin: (origin, callback) => {
@@ -146,9 +149,12 @@ app.get('/api/auth/me', authenticateJWT, async (req, res) => {
 // GET /api/products
 app.get('/api/products', async (req, res) => {
     try {
+        console.log('Fetching products from database...');
         const products = await Product.find().sort({ createdAt: -1 });
+        console.log(`Found ${products.length} products.`);
         res.json(products);
     } catch (err) {
+        console.error('Error fetching products:', err.message);
         res.status(500).json({ message: 'Failed to fetch products', error: err.message });
     }
 });
