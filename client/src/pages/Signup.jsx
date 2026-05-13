@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_URL } from '../lib/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, ArrowRight, UserPlus, Eye, EyeOff } from 'lucide-react';
@@ -24,9 +25,7 @@ const Signup = () => {
         setIsSubmitting(true);
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : 'https://shadowgrid-x8m6.onrender.com');
-            console.log('Attempting signup connection to:', apiUrl);
-            const response = await fetch(`${apiUrl}/api/auth/signup`, {
+            const response = await fetch(`${API_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })

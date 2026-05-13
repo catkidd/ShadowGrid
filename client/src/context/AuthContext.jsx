@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { API_URL } from '../lib/api';
 
 const AuthContext = createContext();
 
@@ -25,8 +26,7 @@ export const AuthProvider = ({ children }) => {
             }
 
             try {
-                const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : 'https://shadowgrid-x8m6.onrender.com');
-                const response = await fetch(`${apiUrl}/api/auth/me`, {
+                const response = await fetch(`${API_URL}/api/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { API_URL } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { 
     Plus, Edit, Trash2, LayoutDashboard, Package, 
@@ -21,20 +22,13 @@ const AdminDashboard = () => {
         name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', sku: '', stock: '', imageURL: '', description: '', specs: ''
     });
 
-    // Mock Orders for demonstration
-    const mockOrders = useMemo(() => [
-        { id: 'ORD-1001', customer: 'John Doe', date: '2026-05-08', status: 'Delivered', total: 259.98 },
-        { id: 'ORD-1002', customer: 'Jane Smith', date: '2026-05-08', status: 'Processing', total: 129.99 },
-        { id: 'ORD-1003', customer: 'Robert Brown', date: '2026-05-07', status: 'Shipped', total: 899.99 },
-        { id: 'ORD-1004', customer: 'Alice White', date: '2026-05-06', status: 'Delivered', total: 45.50 },
-        { id: 'ORD-1005', customer: 'Charlie Black', date: '2026-05-05', status: 'Cancelled', total: 189.99 },
-    ], []);
+    const [orders, setOrders] = useState([]);
+    const [ordersLoading, setOrdersLoading] = useState(false);
 
 
     const fetchProducts = useCallback(async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : 'https://shadowgrid-x8m6.onrender.com');
-            const response = await fetch(`${apiUrl}/api/products`);
+            const response = await fetch(`${API_URL}/api/products`);
             const data = await response.json();
             setProducts(Array.isArray(data) ? data : []);
         } catch {
@@ -44,22 +38,40 @@ const AdminDashboard = () => {
         }
     }, []);
 
+    const fetchOrders = useCallback(async () => {
+        setOrdersLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/api/orders`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setOrders(Array.isArray(data) ? data : []);
+            }
+        } catch {
+            toast.error('Failed to fetch orders.');
+        } finally {
+            setOrdersLoading(false);
+        }
+    }, [token]);
+
     useEffect(() => {
         if (!authLoading && isAdmin) {
             fetchProducts();
+            fetchOrders();
         }
-    }, [authLoading, isAdmin, fetchProducts]);
+    }, [authLoading, isAdmin, fetchProducts, fetchOrders]);
 
     const metrics = useMemo(() => {
         const totalStock = products.reduce((sum, p) => sum + (p.stock || 0), 0);
-        const totalRevenue = mockOrders.reduce((sum, o) => o.status !== 'Cancelled' ? sum + o.total : sum, 0);
+        const totalRevenue = orders.reduce((sum, o) => o.status !== 'Cancelled' ? sum + o.total : sum, 0);
         return {
             revenue: totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 }),
-            orders: mockOrders.length,
+            orders: orders.length,
             stock: totalStock,
             products: products.length
         };
-    }, [products, mockOrders]);
+    }, [products, orders]);
 
     const filteredProducts = useMemo(() => {
         return products.filter(p => 
@@ -71,8 +83,7 @@ const AdminDashboard = () => {
 
     const handleAction = async (method, url, body = null) => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : 'https://shadowgrid-x8m6.onrender.com');
-            const response = await fetch(`${apiUrl}${url}`, {
+            const response = await fetch(`${API_URL}${url}`, {
                 method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,13 +105,35 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleUpdateOrderStatus = async (orderId, status) => {
+        try {
+            const response = await fetch(`${API_URL}/api/orders/${orderId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ status })
+            });
+            if (response.ok) {
+                toast.success(`Order status updated to ${status}`);
+                fetchOrders();
+            } else {
+                const err = await response.json();
+                toast.error(err.message || 'Failed to update status');
+            }
+        } catch {
+            toast.error('Connection to server lost');
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
             ...formData,
             price: parseFloat(formData.price),
-            originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-            discount: formData.discount ? parseFloat(formData.discount) : null,
+            salePrice: formData.salePrice ? parseFloat(formData.salePrice) : parseFloat(formData.price),
+            originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : parseFloat(formData.price),
             stock: parseInt(formData.stock),
             specs: typeof formData.specs === 'string' ? formData.specs.split(',').map(s => s.trim()) : formData.specs
         };
@@ -113,7 +146,7 @@ const AdminDashboard = () => {
     };
 
     const resetForm = () => {
-        setFormData({ name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', sku: '', stock: '', imageURL: '', description: '', specs: '' });
+        setFormData({ name: '', brand: '', category: '', price: '', salePrice: '', originalPrice: '', sku: '', stock: '', imageURL: '', description: '', specs: '' });
         setEditingProduct(null);
         setIsCreating(false);
     };
@@ -161,7 +194,7 @@ const AdminDashboard = () => {
                     <div className="space-y-10">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <MetricCard label="Total Revenue" value={`$${metrics.revenue}`} icon={TrendingUp} color="text-emerald-400" />
-                            <MetricCard label="Active Orders" value={metrics.orders} icon={ShoppingCart} color="text-neon" />
+                            <MetricCard label="Total Orders" value={metrics.orders} icon={ShoppingCart} color="text-neon" />
                             <MetricCard label="Total Inventory" value={metrics.stock} icon={Box} color="text-orange-400" />
                             <MetricCard label="Product Range" value={metrics.products} icon={Package} color="text-purple-400" />
                         </div>
@@ -173,23 +206,26 @@ const AdminDashboard = () => {
                                     Recent Activity
                                 </h3>
                                 <div className="space-y-4">
-                                    {mockOrders.slice(0, 3).map(order => (
-                                        <div key={order.id} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-all">
+                                    {orders.slice(0, 3).map(order => (
+                                        <div key={order._id} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-all">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-10 h-10 rounded-full bg-neon/10 flex items-center justify-center text-neon text-xs font-bold">
-                                                    {order.customer.charAt(0)}
+                                                    {order.user?.email?.charAt(0).toUpperCase() || 'U'}
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm font-bold">{order.customer}</p>
-                                                    <p className="text-[10px] text-white/40 uppercase font-mono">{order.id} • {order.date}</p>
+                                                    <p className="text-sm font-bold">{order.user?.email || 'Guest'}</p>
+                                                    <p className="text-[10px] text-white/40 uppercase font-mono">{order._id.slice(-8).toUpperCase()} • {new Date(order.createdAt).toLocaleDateString()}</p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-sm font-bold">${order.total.toFixed(2)}</p>
-                                                <p className={`text-[10px] uppercase font-bold ${order.status === 'Delivered' ? 'text-emerald-400' : 'text-orange-400'}`}>{order.status}</p>
+                                                <p className={`text-[10px] uppercase font-bold ${order.status === 'Delivered' ? 'text-emerald-400' : order.status === 'Cancelled' ? 'text-red-400' : 'text-orange-400'}`}>{order.status}</p>
                                             </div>
                                         </div>
                                     ))}
+                                    {orders.length === 0 && !ordersLoading && (
+                                        <p className="text-white/30 font-mono text-xs uppercase text-center py-4">No orders yet.</p>
+                                    )}
                                 </div>
                                 <button 
                                     onClick={() => setActiveTab('orders')}
@@ -259,13 +295,13 @@ const AdminDashboard = () => {
                                     <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <InputField label="Product Title" value={formData.name} onChange={v => setFormData({...formData, name: v})} placeholder="e.g. ShadowBlade X1" />
                                         <InputField label="Brand" value={formData.brand} onChange={v => setFormData({...formData, brand: v})} placeholder="e.g. ShadowGrid" />
-                                        <InputField label="Category" value={formData.category} onChange={v => setFormData({...formData, category: v})} placeholder="e.g. Keyboards" />
+                                        <InputField label="Category" value={formData.category} onChange={v => setFormData({...formData, category: v})} placeholder="Keyboards / Mice / Displays" />
                                         <InputField label="SKU (Unique)" value={formData.sku} onChange={v => setFormData({...formData, sku: v})} placeholder="e.g. SG-KB-001" />
                                         <InputField label="Inventory Count" type="number" value={formData.stock} onChange={v => setFormData({...formData, stock: v})} placeholder="0" />
                                         <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <InputField label="Sale Price ($)" type="number" value={formData.price} onChange={v => setFormData({...formData, price: v})} placeholder="0.00" />
-                                            <InputField label="List Price ($)" type="number" value={formData.originalPrice} onChange={v => setFormData({...formData, originalPrice: v})} placeholder="0.00" />
-                                            <InputField label="Discount (%)" type="number" value={formData.discount} onChange={v => setFormData({...formData, discount: v})} placeholder="0.00" />
+                                            <InputField label="Sale Price ($)" type="number" value={formData.salePrice} onChange={v => setFormData({...formData, salePrice: v})} placeholder="0.00" />
+                                            <InputField label="Original / List Price ($)" type="number" value={formData.originalPrice} onChange={v => setFormData({...formData, originalPrice: v})} placeholder="0.00" />
+                                            <InputField label="Display Price ($)" type="number" value={formData.price} onChange={v => setFormData({...formData, price: v})} placeholder="0.00" />
                                         </div>
                                         <div className="md:col-span-2">
                                             <InputField label="Specifications (Comma separated)" value={Array.isArray(formData.specs) ? formData.specs.join(', ') : formData.specs} onChange={v => setFormData({...formData, specs: v})} placeholder="e.g. RGB, Mechanical, Wireless" />
@@ -343,8 +379,9 @@ const AdminDashboard = () => {
                                                                         brand: product.brand,
                                                                         category: product.category,
                                                                         price: product.price,
+                                                                        salePrice: product.salePrice || '',
                                                                         originalPrice: product.originalPrice || '',
-                                                                        discount: product.discount || '',
+                                                                        sku: product.sku || '',
                                                                         stock: product.stock,
                                                                         imageURL: product.imageURL,
                                                                         description: product.description,
@@ -399,27 +436,45 @@ const AdminDashboard = () => {
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Date</th>
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Status</th>
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40 text-right">Total</th>
+                                            <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40 text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
-                                        {mockOrders.map(order => (
-                                            <tr key={order.id} className="hover:bg-white/[0.02] transition-colors">
-                                                <td className="p-5 text-xs font-mono font-bold text-white">{order.id}</td>
-                                                <td className="p-5 text-xs font-bold text-white/80">{order.customer}</td>
-                                                <td className="p-5 text-xs text-white/40 font-mono">{order.date}</td>
-                                                <td className="p-5">
-                                                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
-                                                        order.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                                                        order.status === 'Processing' ? 'bg-neon/10 text-neon border-neon/20' :
-                                                        order.status === 'Cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                                        'bg-white/10 text-white/60 border-white/20'
-                                                    }`}>
-                                                        {order.status}
-                                                    </span>
-                                                </td>
-                                                <td className="p-5 text-right font-mono font-bold text-white">${order.total.toFixed(2)}</td>
-                                            </tr>
-                                        ))}
+                                        {ordersLoading ? (
+                                            <tr><td colSpan="6" className="p-20 text-center text-white/20 font-mono animate-pulse uppercase tracking-[0.2em]">Loading Orders...</td></tr>
+                                        ) : orders.length === 0 ? (
+                                            <tr><td colSpan="6" className="p-20 text-center text-white/40 font-mono uppercase tracking-[0.2em]">No orders in the system yet.</td></tr>
+                                        ) : (
+                                            orders.map(order => (
+                                                <tr key={order._id} className="hover:bg-white/[0.02] transition-colors">
+                                                    <td className="p-5 text-xs font-mono font-bold text-white">{order._id.slice(-8).toUpperCase()}</td>
+                                                    <td className="p-5 text-xs font-bold text-white/80">{order.user?.email || 'Unknown'}</td>
+                                                    <td className="p-5 text-xs text-white/40 font-mono">{new Date(order.createdAt).toLocaleDateString()}</td>
+                                                    <td className="p-5">
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
+                                                            order.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                                                            order.status === 'Processing' ? 'bg-neon/10 text-neon border-neon/20' :
+                                                            order.status === 'Cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                                                            'bg-white/10 text-white/60 border-white/20'
+                                                        }`}>
+                                                            {order.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="p-5 text-right font-mono font-bold text-white">${order.total.toFixed(2)}</td>
+                                                    <td className="p-5 text-right">
+                                                        <select
+                                                            value={order.status}
+                                                            onChange={(e) => handleUpdateOrderStatus(order._id, e.target.value)}
+                                                            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-[10px] font-mono uppercase text-white/60 focus:border-neon focus:outline-none cursor-pointer"
+                                                        >
+                                                            {['Processing', 'Shipped', 'Delivered', 'Cancelled'].map(s => (
+                                                                <option key={s} value={s} className="bg-gray-900">{s}</option>
+                                                            ))}
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

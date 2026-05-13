@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from './lib/api';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Search, Layers, Zap, ArrowRight, Menu, X, ShieldCheck, Mail, Check } from 'lucide-react';
 import { CartProvider, useCart } from './context/CartContext';
@@ -19,6 +20,7 @@ import ProductDetail from './pages/ProductDetail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
+import Checkout from './pages/Checkout';
 import FadeInUp from './components/FadeInUp';
 import ScrollToTop from './components/ScrollToTop';
 import toast, { Toaster } from 'react-hot-toast';
@@ -32,8 +34,7 @@ const Home = ({ preFilter = 'All' }) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : 'https://shadowgrid-x8m6.onrender.com');
-                const response = await fetch(`${apiUrl}/api/products`);
+                const response = await fetch(`${API_URL}/api/products`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
@@ -537,6 +538,7 @@ const AnimatedRoutes = () => {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route 
                     path="/admin/dashboard" 
                     element={

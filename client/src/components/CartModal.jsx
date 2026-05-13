@@ -1,8 +1,12 @@
 import { X, Trash2, Plus, Minus, CreditCard, ShoppingBag } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const CartModal = ({ isOpen, onClose }) => {
     const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     if (!isOpen) return null;
 
@@ -78,9 +82,19 @@ const CartModal = ({ isOpen, onClose }) => {
                             <span className="text-sm text-white/50 uppercase tracking-widest font-mono">Subtotal</span>
                             <span className="text-2xl font-bold text-neon font-mono">${cartTotal.toFixed(2)}</span>
                         </div>
-                        <button className="w-full py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-sm rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 neon-glow">
+                        <button
+                            onClick={() => {
+                                onClose();
+                                if (!user) {
+                                    navigate('/login');
+                                } else {
+                                    navigate('/checkout');
+                                }
+                            }}
+                            className="w-full py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-sm rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 neon-glow"
+                        >
                             <CreditCard size={18} />
-                            Checkout
+                            Proceed to Checkout
                         </button>
                         <button 
                             onClick={clearCart}

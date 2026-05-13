@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../lib/api';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Plus, Check, Zap, Star, Truck, ShieldCheck, RefreshCw } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -16,8 +17,7 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const apiUrl = import.meta.env.VITE_API_URL || 'https://shadowgrid-x8m6.onrender.com';
-                const response = await fetch(`${apiUrl}/api/products/${id}`);
+                const response = await fetch(`${API_URL}/api/products/${id}`);
                 if (!response.ok) throw new Error('Product not found or API error');
                 const data = await response.json();
                 setProduct(data);
