@@ -11,6 +11,13 @@ const rateLimit = require('express-rate-limit');
 
 dotenv.config();
 
+if (!process.env.MONGODB_URI) {
+    console.error('CRITICAL ERROR: MONGODB_URI is not defined in environment variables.');
+    console.error('Please ensure you have added MONGODB_URI to your Render Environment Variables.');
+    process.exit(1);
+}
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
