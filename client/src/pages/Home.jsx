@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, ShoppingBag, Layers } from 'lucide-react';
+import { ArrowRight, Zap, ShoppingBag, Layers, ShieldCheck } from 'lucide-react';
 import { useSearch } from '../context/SearchContext';
 import { API_URL } from '../lib/api';
 import ProductCard from '../components/ProductCard';
