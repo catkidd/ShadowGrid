@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../lib/api';
@@ -10,7 +10,6 @@ import FadeInUp from '../components/FadeInUp';
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
     const { token } = useAuth();
-    const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [orderPlaced, setOrderPlaced] = useState(null);
 

@@ -1,5 +1,5 @@
 import { X, Trash2, Plus, Minus, CreditCard, ShoppingBag } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 

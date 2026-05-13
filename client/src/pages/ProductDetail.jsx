@@ -3,7 +3,9 @@ import { API_URL } from '../lib/api';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Plus, Check, Zap, Star, Truck, ShieldCheck, RefreshCw } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import FadeInUp from '../components/FadeInUp';
+import toast from 'react-hot-toast';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -13,6 +15,10 @@ const ProductDetail = () => {
     const { addToCart } = useCart();
     const [added, setAdded] = useState(false);
     const [activeTab, setActiveTab] = useState('delivery'); // delivery, returns, warranty
+    const { user } = useAuth();
+    const [reviewRating, setReviewRating] = useState(5);
+    const [reviewComment, setReviewComment] = useState('');
+    const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -36,6 +42,49 @@ const ProductDetail = () => {
         addToCart(product);
         setAdded(true);
         setTimeout(() => setAdded(false), 2000);
+    };
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        if (!user) {
+            toast.error('You must be logged in to leave a review');
+            return;
+        }
+        if (!reviewComment.trim()) {
+            toast.error('Please enter a review comment');
+            return;
+        }
+        
+        setReviewSubmitting(true);
+        try {
+            const token = localStorage.getItem('shadowgrid-token') || sessionStorage.getItem('shadowgrid-token');
+            const response = await fetch(`${API_URL}/api/products/${id}/reviews`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ rating: reviewRating, comment: reviewComment })
+            });
+            
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Failed to submit review');
+            
+            toast.success('Review submitted successfully');
+            setReviewComment('');
+            setReviewRating(5);
+            
+            // Refresh product to get new reviews
+            const freshResponse = await fetch(`${API_URL}/api/products/${id}`);
+            if (freshResponse.ok) {
+                const freshProduct = await freshResponse.json();
+                setProduct(freshProduct);
+            }
+        } catch (err) {
+            toast.error(err.message);
+        } finally {
+            setReviewSubmitting(false);
+        }
     };
 
     if (loading) {
@@ -261,10 +310,60 @@ const ProductDetail = () => {
                                 </div>
                             ))
                         ) : (
-                            <div className="glass-card p-8 rounded-xl text-center border border-white/5">
-                                <p className="text-white/40 font-mono text-sm uppercase tracking-widest">No reviews for this product yet.</p>
-                            </div>
+                            <p className="text-white/40 font-mono text-sm uppercase tracking-widest">No reviews for this product yet.</p>
                         )}
+                        
+                        {/* Review Form */}
+                        <div className="glass-card p-6 rounded-xl border border-white/5 mt-8">
+                            <h3 className="text-xl font-bold uppercase tracking-widest mb-4">Write a Review</h3>
+                            {user ? (
+                                <form onSubmit={handleReviewSubmit}>
+                                    <div className="mb-4">
+                                        <label className="block text-xs font-mono uppercase tracking-widest text-white/50 mb-2">Rating</label>
+                                        <div className="flex gap-2">
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <button
+                                                    key={star}
+                                                    type="button"
+                                                    onClick={() => setReviewRating(star)}
+                                                    className="focus:outline-none"
+                                                >
+                                                    <Star 
+                                                        size={24} 
+                                                        fill={star <= reviewRating ? "currentColor" : "none"} 
+                                                        className={star <= reviewRating ? "text-yellow-400" : "text-white/20 hover:text-yellow-400/50 transition-colors"} 
+                                                    />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-xs font-mono uppercase tracking-widest text-white/50 mb-2">Comment</label>
+                                        <textarea
+                                            value={reviewComment}
+                                            onChange={(e) => setReviewComment(e.target.value)}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm font-mono focus:border-neon focus:outline-none transition-all resize-none min-h-[100px] placeholder:text-white/20"
+                                            placeholder="Share your experience with this product..."
+                                            required
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        disabled={reviewSubmitting}
+                                        className="px-6 py-3 bg-neon text-charcoal rounded-xl font-black uppercase tracking-widest text-xs hover:bg-white transition-all w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                                    </button>
+                                </form>
+                            ) : (
+                                <div className="text-center py-6 border border-white/10 border-dashed rounded-xl">
+                                    <p className="text-white/60 mb-4 font-mono text-sm">You must be logged in to leave a review.</p>
+                                    <Link to="/login" className="inline-block px-6 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-bold uppercase tracking-widest text-xs transition-colors">
+                                        Log In
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
