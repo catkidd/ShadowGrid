@@ -21,23 +21,35 @@ if (!process.env.MONGODB_URI) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Sanitize CLIENT_URL (remove trailing slash if present)
+const CLIENT_URL = process.env.CLIENT_URL ? process.env.CLIENT_URL.replace(/\/$/, '') : null;
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(cors({
     origin: (origin, callback) => {
         const allowed = [
-            process.env.CLIENT_URL,
+            CLIENT_URL,
             'http://localhost:5173',
             'http://localhost:5174',
             'http://localhost:5175',
             'http://localhost:3000'
         ].filter(Boolean);
-        if (!origin || allowed.includes(origin)) return callback(null, true);
+        
+        // Allow requests with no origin (like mobile apps or curl) or if origin is in allowed list
+        if (!origin || allowed.includes(origin.replace(/\/$/, ''))) {
+            return callback(null, true);
+        }
+        
+        console.warn(`Blocked CORS request from origin: ${origin}`);
         return callback(new Error(`CORS: origin '${origin}' is not permitted`));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
 app.use(express.json());
+
+// Health Check Endpoint
+app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
 // ─── Auth Middleware ──────────────────────────────────────────────────────────
 const authenticateJWT = (req, res, next) => {
