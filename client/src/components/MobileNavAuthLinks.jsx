@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, Navigate, useNavigate, Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import { ShoppingBag, Search, Layers, Zap, ArrowRight, Menu, X, ShieldCheck, Mail, Check, Star, Truck, RefreshCw } from 'lucide-react';
-import { useCart } from '../context/CartContext';
-import { useSearch } from '../context/SearchContext';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { API_URL } from '../lib/api';
 import toast from 'react-hot-toast';
 
 const MobileNavAuthLinks = ({ closeMenu }) => {

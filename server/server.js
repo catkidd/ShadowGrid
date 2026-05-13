@@ -23,13 +23,17 @@ const PORT = process.env.PORT || 5000;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(cors({
-    origin: [
-        'https://shadowgrid-client.onrender.com',
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'http://localhost:5175',
-        'http://localhost:3000'
-    ],
+    origin: (origin, callback) => {
+        const allowed = [
+            process.env.CLIENT_URL,
+            'http://localhost:5173',
+            'http://localhost:5174',
+            'http://localhost:5175',
+            'http://localhost:3000'
+        ].filter(Boolean);
+        if (!origin || allowed.includes(origin)) return callback(null, true);
+        return callback(new Error(`CORS: origin '${origin}' is not permitted`));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
@@ -214,7 +218,7 @@ app.post('/api/products/:id/reviews', authenticateJWT, async (req, res) => {
             rating: Number(rating),
             comment,
             verifiedPurchase: true, // We can enhance this to check order history later
-            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            date: new Date().toISOString()
         };
 
         product.reviews.push(review);

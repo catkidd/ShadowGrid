@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, Navigate, useNavigate, Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import { ShoppingBag, Search, Layers, Zap, ArrowRight, Menu, X, ShieldCheck, Mail, Check, Star, Truck, RefreshCw } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ShoppingBag, Search, Layers, Zap, Menu, X, Mail, Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useSearch } from '../context/SearchContext';
-import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../lib/api';
 import toast from 'react-hot-toast';
 
@@ -229,7 +228,7 @@ const Layout = ({ children }) => {
                             <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
                             <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
                             <li><Link to="/protocols" className="hover:text-white transition-colors">Help Center</Link></li>
-                            <li><Link to="/maintenance" className="hover:text-white transition-colors">Careers</Link></li>
+                            <li><Link to="/contact" className="hover:text-white transition-colors">Careers</Link></li>
                         </ul>
                     </div>
                     <div>
@@ -273,7 +272,7 @@ const Layout = ({ children }) => {
                             </div>
                         </div>
                         <div className="flex flex-col items-center md:items-end gap-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">
-                            <p>Â© 2026 ShadowGrid Ops. All Rights Reserved.</p>
+                            <p>© 2026 ShadowGrid Ops. All Rights Reserved.</p>
                             <div className="flex gap-8">
                                 <Link to="/privacy" className="hover:text-neon transition-colors">Privacy Policy</Link>
                                 <Link to="/terms" className="hover:text-neon transition-colors">Terms of Service</Link>

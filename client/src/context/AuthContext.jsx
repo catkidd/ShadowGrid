@@ -39,8 +39,9 @@ export const AuthProvider = ({ children }) => {
                     // Token might be invalid or expired
                     logout();
                 }
-            } catch (err) {
-                console.error('Auth check failed:', err);
+            } catch {
+                // Silent failure: token is invalid or the server is unreachable.
+                // Logging out clears the invalid token without leaking error details.
             } finally {
                 setLoading(false);
             }

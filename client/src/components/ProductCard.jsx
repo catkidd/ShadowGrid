@@ -4,22 +4,20 @@ import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
+    const discount = product.originalPrice && product.originalPrice > product.price
+        ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+        : 0;
 
     return (
         <div className="glass-card group relative flex flex-col h-full transition-all duration-300 hover:-translate-y-2 border border-transparent hover:border-neon/50">
             {/* Discount Badge */}
-            {(() => {
-                const discount = product.originalPrice && product.originalPrice > product.price 
-                    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
-                    : 0;
-                return discount > 0 ? (
-                    <div className="absolute top-4 right-4 z-10">
-                        <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-red-500 text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
-                            -{discount}% OFF
-                        </span>
-                    </div>
-                ) : null;
-            })()}
+            {discount > 0 && (
+                <div className="absolute top-4 right-4 z-10">
+                    <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-red-500 text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
+                        -{discount}% OFF
+                    </span>
+                </div>
+            )}
 
             {/* Image Container */}
             <Link to={`/product/${product._id}`} className="relative aspect-[4/3] overflow-hidden block">

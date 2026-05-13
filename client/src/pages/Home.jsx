@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, Navigate, useNavigate, Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import { ShoppingBag, Search, Layers, Zap, ArrowRight, Menu, X, ShieldCheck, Mail, Check, Star, Truck, RefreshCw } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Zap, ShoppingBag, Layers } from 'lucide-react';
 import { useSearch } from '../context/SearchContext';
-import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../lib/api';
-import toast from 'react-hot-toast';
-
 import ProductCard from '../components/ProductCard';
 import FadeInUp from '../components/FadeInUp';
 
@@ -25,7 +21,6 @@ const Home = ({ preFilter = 'All' }) => {
                 if (Array.isArray(data)) {
                     setProducts(data);
                 } else {
-                    console.error('API returned non-array data:', data);
                     setProducts([]);
                 }
             } catch (err) {

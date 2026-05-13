@@ -8,8 +8,12 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(() => {
-        const savedCart = localStorage.getItem('shadowgrid-cart');
-        return savedCart ? JSON.parse(savedCart) : [];
+        try {
+            const savedCart = localStorage.getItem('shadowgrid-cart');
+            return savedCart ? JSON.parse(savedCart) : [];
+        } catch {
+            return [];
+        }
     });
 
     useEffect(() => {
