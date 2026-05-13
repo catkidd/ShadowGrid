@@ -5,7 +5,9 @@ const dotenv = require('dotenv');
 const Product = require('./models/Product');
 const User = require('./models/User');
 const Order = require('./models/Order');
+const Subscriber = require('./models/Subscriber');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 
 dotenv.config();
 
@@ -55,8 +57,16 @@ mongoose.connect(process.env.MONGODB_URI)
 // AUTH ROUTES
 // ═════════════════════════════════════════════════════════════════════════════
 
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 requests per `window` (here, per 15 minutes)
+    message: { message: 'Too many authentication attempts from this IP, please try again after 15 minutes' },
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
 // POST /api/auth/signup
-app.post('/api/auth/signup', async (req, res) => {
+app.post('/api/auth/signup', authLimiter, async (req, res) => {
     const { email, password } = req.body;
     try {
         const existing = await User.findOne({ email });
@@ -77,7 +87,7 @@ app.post('/api/auth/signup', async (req, res) => {
 });
 
 // POST /api/auth/login
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimiter, async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -168,6 +178,46 @@ app.delete('/api/products/:id', authenticateJWT, isAdmin, async (req, res) => {
         res.json({ message: 'Product deleted successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Failed to delete product', error: err.message });
+    }
+});
+
+// POST /api/products/:id/reviews — Authenticated users add a review
+app.post('/api/products/:id/reviews', authenticateJWT, async (req, res) => {
+    const { rating, comment } = req.body;
+    
+    if (!rating || rating < 1 || rating > 5) {
+        return res.status(400).json({ message: 'Please provide a valid rating between 1 and 5' });
+    }
+
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+
+        // Check if user already reviewed
+        const alreadyReviewed = product.reviews.find(
+            (r) => r.user.toString() === req.user.email
+        );
+
+        if (alreadyReviewed) {
+            return res.status(400).json({ message: 'You have already reviewed this product' });
+        }
+
+        const review = {
+            user: req.user.email,
+            rating: Number(rating),
+            comment,
+            verifiedPurchase: true, // We can enhance this to check order history later
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        };
+
+        product.reviews.push(review);
+        product.reviewsCount = product.reviews.length;
+        product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+        await product.save();
+        res.status(201).json({ message: 'Review added successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to add review', error: err.message });
     }
 });
 
@@ -268,6 +318,37 @@ app.put('/api/orders/:id/status', authenticateJWT, isAdmin, async (req, res) => 
         res.json(order);
     } catch (err) {
         res.status(500).json({ message: 'Failed to update order status', error: err.message });
+    }
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
+// NEWSLETTER ROUTES
+// ═════════════════════════════════════════════════════════════════════════════
+
+const newsletterLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 5, // Limit each IP to 5 newsletter subscriptions per hour
+    message: { message: 'Too many subscription attempts from this IP, please try again after an hour' }
+});
+
+// POST /api/newsletter/subscribe
+app.post('/api/newsletter/subscribe', newsletterLimiter, async (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+
+    try {
+        const existing = await Subscriber.findOne({ email });
+        if (existing) return res.status(400).json({ message: 'Email is already subscribed' });
+
+        const subscriber = new Subscriber({ email });
+        await subscriber.save();
+        
+        res.status(201).json({ message: 'Successfully subscribed to newsletter' });
+    } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+        res.status(500).json({ message: 'Failed to subscribe', error: err.message });
     }
 });
 
