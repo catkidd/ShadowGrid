@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const CartContext = createContext();
 
@@ -22,7 +23,7 @@ export const CartProvider = ({ children }) => {
             // Stock Validator Logic
             const currentQuantity = existingItem ? existingItem.quantity : 0;
             if (currentQuantity + 1 > product.stock) {
-                alert(`Cannot add more. Only ${product.stock} units in stock.`);
+                toast.error(`Cannot add more. Only ${product.stock} units in stock.`);
                 return prevCart;
             }
 
@@ -46,7 +47,7 @@ export const CartProvider = ({ children }) => {
             if (item._id === productId) {
                 const newQty = item.quantity + delta;
                 if (newQty > maxStock) {
-                    alert(`Only ${maxStock} units available.`);
+                    toast.error(`Only ${maxStock} units available.`);
                     return item;
                 }
                 if (newQty < 1) return item;
