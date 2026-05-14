@@ -1,6 +1,6 @@
 import { 
     User, Package, Key, LogOut, 
-    ShoppingBag, CreditCard, Calendar, ChevronRight,
+    ShoppingBag, CreditCard, ChevronRight,
     Mail, Shield, ArrowRight, X,
     MapPin, Box
 } from 'lucide-react';
