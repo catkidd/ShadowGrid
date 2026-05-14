@@ -27,9 +27,8 @@ const UserProfileView = ({
     const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
     const metrics = [
-        { label: 'Total Orders', value: orders.length, icon: Package, color: 'text-neon' },
-        { label: 'Total Investment', value: `$${totalSpent.toFixed(2)}`, icon: CreditCard, color: 'text-blue-400' },
-        { label: 'Member Since', value: memberSince, icon: Calendar, color: 'text-purple-400' },
+        { label: 'Shopping History', value: `$${totalSpent.toFixed(2)}`, sub: `${orders.length} total orders`, icon: ShoppingBag, color: 'text-neon', tab: 'orders' },
+        { label: 'Account Status', value: 'Verified', sub: `Member since ${memberSince}`, icon: Shield, color: 'text-blue-500', tab: 'account' },
     ];
 
     return (
@@ -89,19 +88,27 @@ const UserProfileView = ({
                 </div>
 
                 <div className="lg:w-2/3">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                        {metrics.map((metric, i) => (
-                            <div key={i} className="glass-card p-6 flex flex-col gap-4 group hover:border-white/20 transition-all">
-                                <div className={`p-3 rounded-xl bg-white/5 w-fit ${metric.color}`}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                    {metrics.map((metric, i) => (
+                        <div 
+                            key={i} 
+                            onClick={() => setActiveTab(metric.tab)}
+                            className={`glass-card p-6 border-l-2 hover:translate-y-[-4px] transition-all cursor-pointer group shadow-xl ${
+                                activeTab === metric.tab ? 'border-l-neon shadow-neon/5' : 'border-l-white/10'
+                            }`}
+                        >
+                            <div className="flex justify-between items-start mb-4">
+                                <div className={`p-3 rounded-xl bg-white/5 ${metric.color}`}>
                                     <metric.icon size={20} />
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-mono uppercase tracking-widest text-white/40 mb-1">{metric.label}</p>
-                                    <p className="text-xl font-black italic tracking-tight">{metric.value}</p>
-                                </div>
+                                <ArrowRight size={14} className={`transition-colors ${activeTab === metric.tab ? 'text-neon' : 'text-white/20 group-hover:text-white'}`} />
                             </div>
-                        ))}
-                    </div>
+                            <h4 className="text-sm font-bold uppercase tracking-widest mb-1">{metric.label}</h4>
+                            <p className="text-xl font-black italic tracking-tight mb-1">{metric.value}</p>
+                            <p className="text-[10px] text-white/40 font-mono uppercase tracking-wider">{metric.sub}</p>
+                        </div>
+                    ))}
+                </div>
 
                     {/* Content Section */}
                     <div className="glass-card min-h-[400px] overflow-hidden">
