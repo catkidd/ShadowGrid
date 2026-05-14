@@ -137,7 +137,7 @@ const Home = ({ preFilter = 'All' }) => {
                             ].map((cat, i) => (
                                 <FadeInUp key={i} delay={i * 150}>
                                     <Link to={cat.link} className="group relative block aspect-square rounded-2xl overflow-hidden glass-card border-white/5 hover:border-neon/50 transition-all duration-500">
-                                        <img src={cat.img} alt={cat.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 opacity-50 group-hover:opacity-100" />
+                                        <img src={cat.img} alt={cat.name} width="800" height="800" style={{ aspectRatio: '1/1' }} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 opacity-50 group-hover:opacity-100" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-charcoal to-transparent opacity-80" />
                                         <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 pr-4">
                                             <h4 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tighter italic transform group-hover:translate-x-2 transition-transform leading-none">{cat.name}</h4>
@@ -171,6 +171,9 @@ const Home = ({ preFilter = 'All' }) => {
                                 <div className="relative h-full min-h-[400px] overflow-hidden">
                                     <img 
                                         src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200" 
+                                        width="1200"
+                                        height="800"
+                                        style={{ aspectRatio: '1200/800' }}
                                         className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 opacity-40 group-hover:opacity-100" 
                                         alt="Promo"
                                     />

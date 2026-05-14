@@ -189,12 +189,32 @@ app.put('/api/auth/password', authenticateJWT, async (req, res) => {
 // PRODUCT ROUTES
 // ═════════════════════════════════════════════════════════════════════════════
 
+// In-memory cache for products to reduce LCP latency
+let productsCache = null;
+let productsCacheTimestamp = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+const clearProductsCache = () => {
+    productsCache = null;
+    productsCacheTimestamp = 0;
+};
+
 // GET /api/products
 app.get('/api/products', async (req, res) => {
     try {
-        console.log('Fetching products from database...');
-        const products = await Product.find().sort({ createdAt: -1 });
+        const now = Date.now();
+        if (productsCache && (now - productsCacheTimestamp < CACHE_TTL)) {
+            console.log('Serving products from memory cache (Fast response)...');
+            return res.json(productsCache);
+        }
+
+        console.log('Fetching products from database (Cache miss)...');
+        const products = await Product.find().select('-__v').sort({ createdAt: -1 }).lean();
         console.log(`Found ${products.length} products.`);
+        
+        productsCache = products;
+        productsCacheTimestamp = now;
+        
         res.json(products);
     } catch (err) {
         console.error('Error fetching products:', err.message);
@@ -208,7 +228,7 @@ app.get('/api/products/:id', async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid product ID format' });
         }
-        const product = await Product.findById(req.params.id);
+        const product = await Product.findById(req.params.id).lean();
         if (!product) return res.status(404).json({ message: 'Product not found' });
         res.json(product);
     } catch (err) {
@@ -221,6 +241,7 @@ app.post('/api/products', authenticateJWT, isAdmin, async (req, res) => {
     try {
         const product = new Product(req.body);
         await product.save();
+        clearProductsCache(); // Invalidate cache
         res.status(201).json(product);
     } catch (err) {
         res.status(400).json({ message: 'Failed to create product', error: err.message });
@@ -236,6 +257,7 @@ app.put('/api/products/:id', authenticateJWT, isAdmin, async (req, res) => {
             { new: true, runValidators: true }
         );
         if (!product) return res.status(404).json({ message: 'Product not found' });
+        clearProductsCache(); // Invalidate cache
         res.json(product);
     } catch (err) {
         res.status(400).json({ message: 'Failed to update product', error: err.message });
@@ -247,6 +269,7 @@ app.delete('/api/products/:id', authenticateJWT, isAdmin, async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
+        clearProductsCache(); // Invalidate cache
         res.json({ message: 'Product deleted successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Failed to delete product', error: err.message });
