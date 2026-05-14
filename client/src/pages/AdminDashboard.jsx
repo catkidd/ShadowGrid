@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { 
     Plus, Edit, Trash2, LayoutDashboard, Package, 
     Save, X, ShoppingCart, TrendingUp, Box, 
-    Search, ChevronRight
+    Search, ChevronRight, Users
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
@@ -24,6 +24,9 @@ const AdminDashboard = () => {
 
     const [orders, setOrders] = useState([]);
     const [ordersLoading, setOrdersLoading] = useState(false);
+
+    const [users, setUsers] = useState([]);
+    const [usersLoading, setUsersLoading] = useState(false);
 
 
     const fetchProducts = useCallback(async () => {
@@ -55,13 +58,31 @@ const AdminDashboard = () => {
         }
     }, [token]);
 
+    const fetchUsers = useCallback(async () => {
+        setUsersLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/api/users`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setUsers(Array.isArray(data) ? data : []);
+            }
+        } catch {
+            toast.error('Failed to fetch users.');
+        } finally {
+            setUsersLoading(false);
+        }
+    }, [token]);
+
     useEffect(() => {
         if (!authLoading && isAdmin) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchProducts();
             fetchOrders();
+            fetchUsers();
         }
-    }, [authLoading, isAdmin, fetchProducts, fetchOrders]);
+    }, [authLoading, isAdmin, fetchProducts, fetchOrders, fetchUsers]);
 
     const metrics = useMemo(() => {
         const totalStock = products.reduce((sum, p) => sum + (p.stock || 0), 0);
@@ -70,9 +91,10 @@ const AdminDashboard = () => {
             revenue: totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 }),
             orders: orders.length,
             stock: totalStock,
-            products: products.length
+            products: products.length,
+            users: users.length
         };
-    }, [products, orders]);
+    }, [products, orders, users]);
 
     const filteredProducts = useMemo(() => {
         return products.filter(p => 
@@ -128,6 +150,28 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleUpdateUserRole = async (userId, role) => {
+        try {
+            const response = await fetch(`${API_URL}/api/users/${userId}/role`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ role })
+            });
+            if (response.ok) {
+                toast.success(`User role updated to ${role}`);
+                fetchUsers();
+            } else {
+                const err = await response.json();
+                toast.error(err.message || 'Failed to update user role');
+            }
+        } catch {
+            toast.error('Connection to server lost');
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
@@ -173,6 +217,7 @@ const AdminDashboard = () => {
                                 { id: 'overview', label: 'Overview', icon: TrendingUp },
                                 { id: 'products', label: 'Inventory', icon: Box },
                                 { id: 'orders', label: 'Orders', icon: ShoppingCart },
+                                { id: 'users', label: 'Users', icon: Users },
                             ].map(tab => (
                                 <button
                                     key={tab.id}
@@ -193,11 +238,12 @@ const AdminDashboard = () => {
                 {/* Dashboard Overview */}
                 {activeTab === 'overview' && (
                     <div className="space-y-10">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                             <MetricCard label="Total Revenue" value={`$${metrics.revenue}`} icon={TrendingUp} color="text-emerald-400" />
                             <MetricCard label="Total Orders" value={metrics.orders} icon={ShoppingCart} color="text-neon" />
                             <MetricCard label="Total Inventory" value={metrics.stock} icon={Box} color="text-orange-400" />
                             <MetricCard label="Product Range" value={metrics.products} icon={Package} color="text-purple-400" />
+                            <MetricCard label="Total Users" value={metrics.users} icon={Users} color="text-blue-400" />
                         </div>
                         
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -470,6 +516,72 @@ const AdminDashboard = () => {
                                                         >
                                                             {['Processing', 'Shipped', 'Delivered', 'Cancelled'].map(s => (
                                                                 <option key={s} value={s} className="bg-gray-900">{s}</option>
+                                                            ))}
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* User Management */}
+                {activeTab === 'users' && (
+                    <div className="space-y-8">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl font-bold uppercase tracking-widest">User Directory</h3>
+                            <div className="text-white/40 text-[10px] font-mono uppercase">
+                                Access Control Management
+                            </div>
+                        </div>
+
+                        <div className="glass-card overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="border-b border-white/5 bg-white/5">
+                                            <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">User Email</th>
+                                            <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Registration Date</th>
+                                            <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Current Role</th>
+                                            <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40 text-right">Change Role</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {usersLoading ? (
+                                            <tr><td colSpan="4" className="p-20 text-center text-white/20 font-mono animate-pulse uppercase tracking-[0.2em]">Synchronizing User Database...</td></tr>
+                                        ) : users.length === 0 ? (
+                                            <tr><td colSpan="4" className="p-20 text-center text-white/40 font-mono uppercase tracking-[0.2em]">No users registered yet.</td></tr>
+                                        ) : (
+                                            users.map(user => (
+                                                <tr key={user._id} className="hover:bg-white/[0.02] transition-colors">
+                                                    <td className="p-5">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold text-white/40 border border-white/10">
+                                                                {user.email.charAt(0).toUpperCase()}
+                                                            </div>
+                                                            <span className="text-xs font-bold text-white">{user.email}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-5 text-xs text-white/40 font-mono">{new Date(user.createdAt).toLocaleDateString()}</td>
+                                                    <td className="p-5">
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
+                                                            user.role === 'admin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-white/10 text-white/60 border-white/20'
+                                                        }`}>
+                                                            {user.role}
+                                                        </span>
+                                                    </td>
+                                                    <td className="p-5 text-right">
+                                                        <select
+                                                            value={user.role}
+                                                            onChange={(e) => handleUpdateUserRole(user._id, e.target.value)}
+                                                            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-[10px] font-mono uppercase text-white/60 focus:border-neon focus:outline-none cursor-pointer"
+                                                        >
+                                                            {['user', 'admin'].map(r => (
+                                                                <option key={r} value={r} className="bg-gray-900">{r}</option>
                                                             ))}
                                                         </select>
                                                     </td>

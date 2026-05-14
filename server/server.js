@@ -93,7 +93,7 @@ const authLimiter = rateLimit({
 
 // POST /api/auth/signup
 app.post('/api/auth/signup', authLimiter, async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
@@ -111,7 +111,11 @@ app.post('/api/auth/signup', authLimiter, async (req, res) => {
         const existing = await User.findOne({ email });
         if (existing) return res.status(400).json({ message: 'User already exists' });
 
-        const user = new User({ email, password });
+        const user = new User({ 
+            email, 
+            password, 
+            role: role && ['user', 'admin'].includes(role) ? role : 'user' 
+        });
         await user.save();
 
         const token = jwt.sign(
@@ -122,6 +126,41 @@ app.post('/api/auth/signup', authLimiter, async (req, res) => {
         res.status(201).json({ token, user: { id: user._id, email: user.email, role: user.role } });
     } catch (err) {
         res.status(500).json({ message: 'Signup failed', error: err.message });
+    }
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
+// USER MANAGEMENT ROUTES (Admin Only)
+// ═════════════════════════════════════════════════════════════════════════════
+
+// GET /api/users — Admin: list all users
+app.get('/api/users', authenticateJWT, isAdmin, async (req, res) => {
+    try {
+        const users = await User.find().select('-password').sort({ createdAt: -1 });
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch users', error: err.message });
+    }
+});
+
+// PUT /api/users/:id/role — Admin: update user role
+app.put('/api/users/:id/role', authenticateJWT, isAdmin, async (req, res) => {
+    const { role } = req.body;
+    if (!['user', 'admin'].includes(role)) {
+        return res.status(400).json({ message: 'Invalid role. Must be "user" or "admin"' });
+    }
+
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { role },
+            { new: true }
+        ).select('-password');
+        
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to update user role', error: err.message });
     }
 });
 

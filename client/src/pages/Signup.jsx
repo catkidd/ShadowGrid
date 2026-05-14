@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { API_URL } from '../lib/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, ArrowRight, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, ArrowRight, UserPlus, Eye, EyeOff, Users, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
 
@@ -10,6 +10,7 @@ const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [role, setRole] = useState('user');
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { login } = useAuth();
@@ -28,7 +29,7 @@ const Signup = () => {
             const response = await fetch(`${API_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password, role })
             });
 
             const data = await response.json();
@@ -115,6 +116,26 @@ const Signup = () => {
                                     placeholder="VERIFY PASSWORD"
                                     className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-sm font-mono focus:border-neon focus:outline-none transition-all placeholder:text-white/10"
                                 />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="signupRole" className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Account Type</label>
+                            <div className="relative">
+                                <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
+                                <select 
+                                    id="signupRole"
+                                    name="role"
+                                    value={role}
+                                    onChange={(e) => setRole(e.target.value)}
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-sm font-mono focus:border-neon focus:outline-none transition-all text-white/60 cursor-pointer appearance-none"
+                                >
+                                    <option value="user" className="bg-[#0D0D0D] text-white">Standard User</option>
+                                    <option value="admin" className="bg-[#0D0D0D] text-white">Administrator</option>
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20">
+                                    <ChevronRight size={16} className="rotate-90" />
+                                </div>
                             </div>
                         </div>
 
