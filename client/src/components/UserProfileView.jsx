@@ -1,6 +1,7 @@
+import { 
     User, Package, Key, LogOut, 
     ShoppingBag, CreditCard, Calendar, ChevronRight,
-    Mail, Shield, ArrowRight, X, ExternalLink,
+    Mail, Shield, ArrowRight, X,
     MapPin, Box
 } from 'lucide-react';
 import { useState } from 'react';
@@ -59,7 +60,7 @@ const UserProfileView = ({
                         >
                             <div className="flex items-center gap-3">
                                 <Shield size={14} />
-                                Security Settings
+                                Security & Password
                             </div>
                             <ChevronRight size={14} />
                         </button>
@@ -109,7 +110,7 @@ const UserProfileView = ({
                                 <div>
                                     <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
                                         <Mail className="text-neon" size={16} />
-                                        Identity Verification
+                                        Account Information
                                     </h3>
                                     <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
                                         <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-2 block">Primary Email</label>
@@ -162,7 +163,7 @@ const UserProfileView = ({
                             <div className="p-8 animate-fade-in">
                                 <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
                                     <ShoppingBag className="text-neon" size={16} />
-                                    Transaction Ledger
+                                    Order History
                                 </h3>
                                 
                                 {isLoadingOrders ? (
@@ -224,9 +225,9 @@ const UserProfileView = ({
                             <div>
                                 <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-3">
                                     <ShoppingBag className="text-neon" size={16} />
-                                    Order Specification
+                                    Order Details
                                 </h3>
-                                <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">Ref: {selectedOrder._id.toUpperCase()}</p>
+                                <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">Order ID: {selectedOrder._id.toUpperCase()}</p>
                             </div>
                             <button 
                                 onClick={() => setSelectedOrder(null)}
@@ -241,7 +242,7 @@ const UserProfileView = ({
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                                 <div className="space-y-4">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2">
-                                        <MapPin size={12} /> Shipping Node
+                                        <MapPin size={12} /> Shipping Address
                                     </h4>
                                     <div className="text-xs space-y-1 text-white/70">
                                         <p className="font-bold text-white text-sm">{selectedOrder.shippingAddress.fullName}</p>
@@ -252,7 +253,7 @@ const UserProfileView = ({
                                 </div>
                                 <div className="space-y-4 text-right md:text-left">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2 md:justify-start justify-end">
-                                        <CreditCard size={12} /> Payment Protocol
+                                        <CreditCard size={12} /> Payment Method
                                     </h4>
                                     <div className="text-xs space-y-1 text-white/70">
                                         <p className="font-bold text-white text-sm uppercase">{selectedOrder.paymentMethod || 'Secure Card'}</p>
@@ -267,7 +268,7 @@ const UserProfileView = ({
                             </div>
 
                             <div className="space-y-6">
-                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Provisioned Hardware</h4>
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Ordered Items</h4>
                                 <div className="space-y-4">
                                     {selectedOrder.items.map((item, i) => (
                                         <div key={i} className="flex items-center gap-4 p-3 bg-white/5 rounded-xl border border-white/5">
@@ -293,7 +294,7 @@ const UserProfileView = ({
                                 Timestamp: {new Date(selectedOrder.createdAt).toLocaleString()}
                             </div>
                             <div className="flex items-center gap-4">
-                                <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Total Investment</p>
+                                <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Order Total</p>
                                 <p className="text-2xl font-black italic tracking-tighter text-neon shadow-neon/20 shadow-lg">${selectedOrder.total.toFixed(2)}</p>
                             </div>
                         </div>

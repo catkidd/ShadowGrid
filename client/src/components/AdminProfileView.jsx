@@ -11,8 +11,8 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
     const adminActions = [
         { label: 'Inventory Management', icon: Box, tab: 'products' },
         { label: 'User Directory', icon: Users, tab: 'users' },
-        { label: 'Secure Protocols', icon: Key, active: true },
-        { label: 'System Settings', icon: Settings, tab: 'overview' },
+        { label: 'Security Settings', icon: Key, active: true },
+        { label: 'System Overview', icon: Settings, tab: 'overview' },
     ];
 
     return (
@@ -26,7 +26,7 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                             <Terminal size={48} className="text-neon animate-pulse" />
                         </div>
                         <div className="absolute -bottom-2 -right-2 bg-neon text-charcoal px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-charcoal shadow-neon/20 shadow-lg">
-                            Superuser
+                            Administrator
                         </div>
                     </div>
                     <h2 className="text-3xl font-black uppercase tracking-tighter italic text-center lg:text-left mb-2">
@@ -34,14 +34,14 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                     </h2>
                     <div className="flex items-center gap-2 text-white/40 font-mono text-[10px] uppercase tracking-widest mb-6">
                         <ShieldCheck size={12} className="text-neon" />
-                        System Administrator Access Level 0
+                        System Administrator Access Level
                     </div>
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 px-6 py-2 bg-white/5 text-white/40 hover:text-red-400 hover:bg-red-400/10 border border-white/5 hover:border-red-400/20 rounded-full transition-all text-[10px] font-bold uppercase tracking-widest"
                     >
                         <LogOut size={14} />
-                        Terminate Session
+                        Logout
                     </button>
                 </div>
 
@@ -53,8 +53,8 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                             </div>
                             <ExternalLink size={14} className="text-white/20 group-hover:text-neon transition-colors" />
                         </div>
-                        <h4 className="text-sm font-bold uppercase tracking-widest mb-1">Command Console</h4>
-                        <p className="text-[10px] text-white/40 font-mono uppercase tracking-wider">Access central management system</p>
+                        <h4 className="text-sm font-bold uppercase tracking-widest mb-1">Admin Dashboard</h4>
+                        <p className="text-[10px] text-white/40 font-mono uppercase tracking-wider">Access central management tools</p>
                     </div>
                     
                     <div className="glass-card p-6 border-l-2 border-l-blue-500 hover:translate-y-[-4px] transition-all shadow-xl shadow-blue-500/5">
@@ -75,7 +75,7 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                 <div className="lg:col-span-4 space-y-4">
                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6 flex items-center gap-2">
                         <Database size={12} />
-                        Core Services
+                        Core Management
                     </h3>
                     <div className="space-y-2">
                         {adminActions.map((item, i) => (
@@ -104,9 +104,9 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                         <div className="bg-white/5 border-b border-white/5 px-8 py-6 flex items-center justify-between">
                             <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-3">
                                 <Key className="text-neon" size={16} />
-                                Security & Authentication
+                                Security & Password
                             </h3>
-                            <div className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Protocol: RSA-4096</div>
+                            <div className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Protocol: Secure SSL</div>
                         </div>
                         
                         <div className="p-8 space-y-10">
@@ -115,11 +115,11 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-neon/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-neon/10 transition-colors"></div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                                     <div>
-                                        <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-2 block">Authorized Email</label>
+                                        <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-2 block">Admin Email</label>
                                         <p className="text-sm font-bold tracking-tight">{user.email}</p>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-2 block">Root ID</label>
+                                        <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-2 block">Admin ID</label>
                                         <p className="text-sm font-mono text-neon uppercase tracking-tighter">{user._id.toUpperCase()}</p>
                                     </div>
                                 </div>
@@ -127,7 +127,7 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
 
                             {/* Password Update */}
                             <div>
-                                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] mb-6 text-white/60">Update Root Password</h4>
+                                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] mb-6 text-white/60">Update Password</h4>
                                 <form onSubmit={handlePasswordUpdate} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
@@ -137,7 +137,7 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                                                 value={currentPassword}
                                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-mono focus:border-neon focus:outline-none transition-all placeholder:text-white/5"
-                                                placeholder="VERIFY IDENTITY"
+                                                placeholder="CURRENT PASSWORD"
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -147,7 +147,7 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                                                 value={newPassword}
                                                 onChange={(e) => setNewPassword(e.target.value)}
                                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-mono focus:border-neon focus:outline-none transition-all placeholder:text-white/5"
-                                                placeholder="MIN 8 CHARACTERS"
+                                                placeholder="NEW PASSWORD"
                                             />
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                                         disabled={isUpdatingPassword}
                                         className="w-full md:w-auto px-10 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 neon-glow"
                                     >
-                                        {isUpdatingPassword ? 'Syncing...' : 'Override Password'}
+                                        {isUpdatingPassword ? 'Updating...' : 'Update Password'}
                                     </button>
                                 </form>
                             </div>
