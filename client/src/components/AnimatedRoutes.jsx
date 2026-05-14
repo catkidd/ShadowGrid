@@ -14,6 +14,7 @@ import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Checkout from '../pages/Checkout';
 import AdminDashboard from '../pages/AdminDashboard';
+import Profile from '../pages/Profile';
 import ProtectedRoute from './ProtectedRoute';
 
 const AnimatedRoutes = () => {
@@ -38,9 +39,17 @@ const AnimatedRoutes = () => {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route 
-                    path="/admin/dashboard" 
+                    path="/profile" 
                     element={
                         <ProtectedRoute>
+                            <Profile />
+                        </ProtectedRoute>
+                    } 
+                />
+                <Route 
+                    path="/admin/dashboard" 
+                    element={
+                        <ProtectedRoute adminOnly>
                             <AdminDashboard />
                         </ProtectedRoute>
                     } 
@@ -49,6 +58,5 @@ const AnimatedRoutes = () => {
         </FadeInUp>
     );
 };
-
 
 export default AnimatedRoutes;

@@ -61,10 +61,12 @@ const Signup = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Email Address</label>
+                            <label htmlFor="signupEmail" className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                                 <input 
+                                    id="signupEmail"
+                                    name="email"
                                     type="email" 
                                     required
                                     value={email}
@@ -76,10 +78,12 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Password</label>
+                            <label htmlFor="signupPassword" className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                                 <input 
+                                    id="signupPassword"
+                                    name="password"
                                     type={showPassword ? "text" : "password"} 
                                     required
                                     value={password}
@@ -98,10 +102,12 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Confirm Password</label>
+                            <label htmlFor="signupConfirmPassword" className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Confirm Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                                 <input 
+                                    id="signupConfirmPassword"
+                                    name="confirmPassword"
                                     type="password" 
                                     required
                                     value={confirmPassword}

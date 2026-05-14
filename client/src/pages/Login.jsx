@@ -56,10 +56,12 @@ const Login = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Email Address</label>
+                            <label htmlFor="email" className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                                 <input 
+                                    id="email"
+                                    name="email"
                                     type="email" 
                                     required
                                     value={email}
@@ -71,10 +73,12 @@ const Login = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Password</label>
+                            <label htmlFor="password" className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                                 <input 
+                                    id="password"
+                                    name="password"
                                     type={showPassword ? "text" : "password"} 
                                     required
                                     value={password}
@@ -93,9 +97,11 @@ const Login = () => {
                         </div>
 
                         <div className="flex items-center justify-between">
-                            <label className="flex items-center gap-3 cursor-pointer group select-none">
+                            <label htmlFor="rememberMe" className="flex items-center gap-3 cursor-pointer group select-none">
                                 <div className="relative">
                                     <input 
+                                        id="rememberMe"
+                                        name="rememberMe"
                                         type="checkbox" 
                                         className="hidden peer"
                                         checked={rememberMe}
