@@ -4,6 +4,7 @@ import { ArrowRight, Zap, ShoppingBag, Layers, ShieldCheck } from 'lucide-react'
 import { useSearch } from '../context/SearchContext';
 import { API_URL } from '../lib/api';
 import ProductCard from '../components/ProductCard';
+import ProductSkeleton from '../components/ProductSkeleton';
 import FadeInUp from '../components/FadeInUp';
 
 const Home = ({ preFilter = 'All' }) => {
@@ -243,7 +244,7 @@ const Home = ({ preFilter = 'All' }) => {
                     {loading ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {[...Array(8)].map((_, i) => (
-                                <div key={i} className="h-[400px] bg-white/5 animate-pulse rounded-xl" />
+                                <ProductSkeleton key={i} />
                             ))}
                         </div>
                     ) : filteredProducts.length > 0 ? (

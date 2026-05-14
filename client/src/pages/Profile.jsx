@@ -209,8 +209,22 @@ const Profile = () => {
                             </h3>
 
                             {isLoadingOrders ? (
-                                <div className="text-center py-12 text-white/40 font-mono text-sm uppercase tracking-widest animate-pulse">
-                                    Loading secure datalinks...
+                                <div className="space-y-6">
+                                    {[1, 2, 3].map(i => (
+                                        <div key={i} className="glass-card p-6 border-l-4 border-l-white/10 animate-pulse">
+                                            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+                                                <div className="w-24 h-8 bg-white/5 rounded" />
+                                                <div className="w-24 h-8 bg-white/5 rounded" />
+                                                <div className="w-24 h-8 bg-white/5 rounded" />
+                                                <div className="w-20 h-6 bg-white/5 rounded-full" />
+                                            </div>
+                                            <div className="bg-charcoal/50 rounded-lg p-4 space-y-3">
+                                                <div className="w-20 h-4 bg-white/5 rounded mb-3" />
+                                                <div className="w-full h-8 bg-white/5 rounded" />
+                                                <div className="w-full h-8 bg-white/5 rounded" />
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : orders.length === 0 ? (
                                 <div className="glass-card p-12 text-center text-white/40 font-mono text-sm uppercase tracking-widest">

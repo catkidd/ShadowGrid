@@ -89,12 +89,51 @@ const ProductDetail = () => {
 
     if (loading) {
         return (
-            <div className="container mx-auto px-6 py-20 min-h-[60vh] flex items-center justify-center">
-                <div className="animate-pulse flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-t-2 border-neon rounded-full animate-spin" />
-                    <p className="text-neon font-mono uppercase tracking-widest text-xs">Loading Product Details...</p>
+            <main className="container mx-auto px-6 py-20">
+                {/* Back button skeleton */}
+                <div className="w-32 h-4 bg-white/5 rounded animate-pulse mb-12" />
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+                    {/* Image Skeleton */}
+                    <div className="aspect-square lg:aspect-[4/3] rounded-2xl bg-white/5 animate-pulse glass-card" />
+
+                    {/* Info Skeleton */}
+                    <div className="flex flex-col">
+                        <div className="mb-8 border-b border-white/10 pb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-24 h-4 bg-white/5 rounded animate-pulse" />
+                                <div className="w-32 h-4 bg-white/5 rounded animate-pulse" />
+                            </div>
+                            
+                            <div className="w-3/4 h-12 lg:h-16 bg-white/10 rounded animate-pulse mb-6" />
+                            
+                            <div className="space-y-3 mb-8">
+                                <div className="w-full h-4 bg-white/5 rounded animate-pulse" />
+                                <div className="w-5/6 h-4 bg-white/5 rounded animate-pulse" />
+                                <div className="w-4/6 h-4 bg-white/5 rounded animate-pulse" />
+                            </div>
+
+                            <div className="flex items-center gap-6">
+                                <div className="w-32 h-12 bg-white/10 rounded animate-pulse" />
+                                <div className="w-40 h-10 bg-emerald-500/10 border border-emerald-500/20 rounded-lg animate-pulse" />
+                            </div>
+                        </div>
+
+                        {/* Specs Skeleton */}
+                        <div className="mb-10">
+                            <div className="w-48 h-6 bg-white/5 rounded animate-pulse mb-6" />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {[1, 2, 3, 4].map(i => (
+                                    <div key={i} className="glass-card p-4 h-14 bg-white/5 animate-pulse rounded-xl" />
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Button Skeleton */}
+                        <div className="w-full h-16 bg-white/5 rounded-xl animate-pulse" />
+                    </div>
                 </div>
-            </div>
+            </main>
         );
     }
 
