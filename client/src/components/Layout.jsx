@@ -245,7 +245,7 @@ const Layout = ({ children }) => {
                         <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-white/50">
                             <li><Link to="/" className="hover:text-white transition-colors">All Products</Link></li>
                             <li><Link to="/keyboards" className="hover:text-white transition-colors">Keyboards</Link></li>
-                            <li><Link to="/precision" className="hover:text-white transition-colors">Mice</Link></li>
+                            <li><Link to="/precision" className="hover:text-white transition-colors">Precision</Link></li>
                             <li><Link to="/displays" className="hover:text-white transition-colors">Displays</Link></li>
                         </ul>
                     </div>

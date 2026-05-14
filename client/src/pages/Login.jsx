@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { Zap, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
+import { ButtonLoader } from '../components/Loader';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -123,7 +124,12 @@ const Login = () => {
                                 isSubmitting ? 'bg-white/5 text-white/20' : 'bg-neon text-charcoal hover:bg-white neon-glow'
                             }`}
                         >
-                            {isSubmitting ? 'Verifying...' : (
+                            {isSubmitting ? (
+                                <>
+                                    <ButtonLoader />
+                                    Verifying...
+                                </>
+                            ) : (
                                 <>
                                     Login
                                     <ArrowRight size={16} />

@@ -6,6 +6,7 @@ import { API_URL } from '../lib/api';
 import { ArrowLeft, ShoppingBag, MapPin, CreditCard, Check, Package } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
+import { ButtonLoader } from '../components/Loader';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
@@ -193,7 +194,12 @@ const Checkout = () => {
                                 isSubmitting ? 'bg-white/5 text-white/20' : 'bg-neon text-charcoal hover:bg-white neon-glow'
                             }`}
                         >
-                            {isSubmitting ? 'Processing Order...' : (
+                            {isSubmitting ? (
+                                <>
+                                    <ButtonLoader />
+                                    Processing Order...
+                                </>
+                            ) : (
                                 <>
                                     <Check size={18} />
                                     Place Order — ${cartTotal.toFixed(2)}

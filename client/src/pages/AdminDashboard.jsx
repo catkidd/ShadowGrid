@@ -10,6 +10,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
+import Loader from '../components/Loader';
 
 const AdminDashboard = () => {
     const { token, isAdmin, loading: authLoading } = useAuth();
@@ -402,7 +403,9 @@ const AdminDashboard = () => {
                                     <tbody className="divide-y divide-white/5">
                                         {loading ? (
                                             <tr>
-                                                <td colSpan="5" className="p-20 text-center text-white/20 font-mono animate-pulse uppercase tracking-[0.2em]">Synchronizing Inventory...</td>
+                                                <td colSpan="5" className="p-20">
+                                                    <Loader text="Syncing Inventory" />
+                                                </td>
                                             </tr>
                                         ) : filteredProducts.length === 0 ? (
                                             <tr>
@@ -502,7 +505,11 @@ const AdminDashboard = () => {
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
                                         {ordersLoading ? (
-                                            <tr><td colSpan="7" className="p-20 text-center text-white/20 font-mono animate-pulse uppercase tracking-[0.2em]">Loading Orders...</td></tr>
+                                            <tr>
+                                                <td colSpan="7" className="p-20">
+                                                    <Loader text="Loading Orders" />
+                                                </td>
+                                            </tr>
                                         ) : orders.length === 0 ? (
                                             <tr><td colSpan="7" className="p-20 text-center text-white/40 font-mono uppercase tracking-[0.2em]">No orders in the system yet.</td></tr>
                                         ) : (
@@ -576,7 +583,11 @@ const AdminDashboard = () => {
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
                                         {usersLoading ? (
-                                            <tr><td colSpan="4" className="p-20 text-center text-white/20 font-mono animate-pulse uppercase tracking-[0.2em]">Synchronizing User Database...</td></tr>
+                                            <tr>
+                                                <td colSpan="4" className="p-20">
+                                                    <Loader text="Syncing Users" />
+                                                </td>
+                                            </tr>
                                         ) : users.length === 0 ? (
                                             <tr><td colSpan="4" className="p-20 text-center text-white/40 font-mono uppercase tracking-[0.2em]">No users registered yet.</td></tr>
                                         ) : (
@@ -628,9 +639,9 @@ const AdminDashboard = () => {
                                 <div>
                                     <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-3">
                                         <ShoppingBag className="text-neon" size={16} />
-                                        Order System Log
+                                        Order Details
                                     </h3>
-                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">Order Hash: {selectedOrder._id.toUpperCase()}</p>
+                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">Order ID: {selectedOrder._id.toUpperCase()}</p>
                                 </div>
                                 <button 
                                     onClick={() => setSelectedOrder(null)}
@@ -645,14 +656,14 @@ const AdminDashboard = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                                     <div className="space-y-4">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2">
-                                            <Mail size={12} /> Customer Identity
+                                            <Mail size={12} /> Customer Information
                                         </h4>
                                         <div className="text-xs space-y-1 text-white/70">
                                             <p className="font-bold text-white text-sm">{selectedOrder.user?.email || 'Unknown User'}</p>
-                                            <p className="font-mono text-[9px] text-white/30 uppercase">{selectedOrder.user?._id || 'GUEST'}</p>
+                                            <p className="font-mono text-[9px] text-white/30 uppercase">ID: {selectedOrder.user?._id || 'GUEST'}</p>
                                         </div>
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2 pt-2">
-                                            <MapPin size={12} /> Shipping Node
+                                            <MapPin size={12} /> Shipping Address
                                         </h4>
                                         <div className="text-xs space-y-1 text-white/70">
                                             <p className="font-bold text-white">{selectedOrder.shippingAddress.fullName}</p>
@@ -662,7 +673,7 @@ const AdminDashboard = () => {
                                     </div>
                                     <div className="space-y-4 text-right md:text-left">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2 md:justify-start justify-end">
-                                            <CreditCard size={12} /> Payment Protocol
+                                            <CreditCard size={12} /> Payment Method
                                         </h4>
                                         <div className="text-xs space-y-1 text-white/70">
                                             <p className="font-bold text-white text-sm uppercase">{selectedOrder.paymentMethod || 'Card'}</p>
@@ -677,14 +688,14 @@ const AdminDashboard = () => {
                                             </div>
                                         </div>
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2 md:justify-start justify-end pt-2">
-                                            <Calendar size={12} /> Log Timestamp
+                                            <Calendar size={12} /> Order Date
                                         </h4>
                                         <p className="text-xs text-white/70">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
                                     </div>
                                 </div>
 
                                 <div className="space-y-6">
-                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Provisioned Hardware</h4>
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Ordered Items</h4>
                                     <div className="space-y-4">
                                         {selectedOrder.items.map((item, i) => (
                                             <div key={i} className="flex items-center gap-4 p-3 bg-white/5 rounded-xl border border-white/5">
@@ -710,10 +721,10 @@ const AdminDashboard = () => {
                                     onClick={() => setSelectedOrder(null)}
                                     className="px-6 py-2 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-all"
                                 >
-                                    Close Log
+                                    Close Details
                                 </button>
                                 <div className="flex items-center gap-4">
-                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Gross Total</p>
+                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Order Total</p>
                                     <p className="text-2xl font-black italic tracking-tighter text-neon shadow-neon/20 shadow-lg">${selectedOrder.total.toFixed(2)}</p>
                                 </div>
                             </div>

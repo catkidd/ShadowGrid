@@ -4,6 +4,7 @@ import {
     Mail, Shield, ArrowRight, X,
     MapPin, Box
 } from 'lucide-react';
+import { ButtonLoader } from './Loader';
 import { useState } from 'react';
 
 const UserProfileView = ({ 
@@ -154,9 +155,14 @@ const UserProfileView = ({
                                         <button
                                             type="submit"
                                             disabled={isUpdatingPassword}
-                                            className="w-full flex items-center justify-center gap-3 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 neon-glow"
+                                            className="w-full md:w-auto px-10 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2 neon-glow"
                                         >
-                                            {isUpdatingPassword ? 'Updating...' : (
+                                            {isUpdatingPassword ? (
+                                                <>
+                                                    <ButtonLoader />
+                                                    Updating...
+                                                </>
+                                            ) : (
                                                 <>
                                                     Update Password
                                                     <ArrowRight size={14} />

@@ -4,6 +4,7 @@ import {
     Key, LogOut, ExternalLink
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { ButtonLoader } from './Loader';
 
 const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPassword, setCurrentPassword, newPassword, setNewPassword, isUpdatingPassword }) => {
     const navigate = useNavigate();
@@ -141,7 +142,7 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 ml-1">New Root Password</label>
+                                            <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 ml-1">New Password</label>
                                             <input
                                                 type="password"
                                                 value={newPassword}
@@ -154,9 +155,14 @@ const AdminProfileView = ({ user, handleLogout, handlePasswordUpdate, currentPas
                                     <button
                                         type="submit"
                                         disabled={isUpdatingPassword}
-                                        className="w-full md:w-auto px-10 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 neon-glow"
+                                        className="w-full md:w-auto px-10 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2 neon-glow"
                                     >
-                                        {isUpdatingPassword ? 'Updating...' : 'Update Password'}
+                                        {isUpdatingPassword ? (
+                                            <>
+                                                <ButtonLoader />
+                                                Updating...
+                                            </>
+                                        ) : 'Update Password'}
                                     </button>
                                 </form>
                             </div>
