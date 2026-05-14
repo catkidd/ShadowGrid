@@ -4,18 +4,21 @@ import { useAuth } from '../context/AuthContext';
 import { 
     Plus, Edit, Trash2, LayoutDashboard, Package, 
     Save, X, ShoppingCart, TrendingUp, Box, 
-    Search, ChevronRight, Users
+    Search, ChevronRight, Users, Eye, MapPin, 
+    CreditCard, ShoppingBag, Calendar, Mail
 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import FadeInUp from '../components/FadeInUp';
 
 const AdminDashboard = () => {
     const { token, isAdmin, loading: authLoading } = useAuth();
+    const location = useLocation();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editingProduct, setEditingProduct] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
-    const [activeTab, setActiveTab] = useState('overview'); // overview, products, orders
+    const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'overview'); // overview, products, orders, users
     const [searchQuery, setSearchQuery] = useState('');
 
     const [formData, setFormData] = useState({
@@ -27,6 +30,7 @@ const AdminDashboard = () => {
 
     const [users, setUsers] = useState([]);
     const [usersLoading, setUsersLoading] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
 
     const fetchProducts = useCallback(async () => {
@@ -74,6 +78,15 @@ const AdminDashboard = () => {
             setUsersLoading(false);
         }
     }, [token]);
+
+    // Use the render-time state sync pattern to avoid cascading render warnings
+    const [prevLocationKey, setPrevLocationKey] = useState(location.key);
+    if (location.key !== prevLocationKey) {
+        setPrevLocationKey(location.key);
+        if (location.state?.activeTab) {
+            setActiveTab(location.state.activeTab);
+        }
+    }
 
     useEffect(() => {
         if (!authLoading && isAdmin) {
@@ -513,15 +526,22 @@ const AdminDashboard = () => {
                                                     </td>
                                                     <td className="p-5 text-right font-mono font-bold text-white">${order.total.toFixed(2)}</td>
                                                     <td className="p-5 text-right">
-                                                        <select
-                                                            value={order.status}
-                                                            onChange={(e) => handleUpdateOrderStatus(order._id, e.target.value)}
-                                                            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-[10px] font-mono uppercase text-white/60 focus:border-neon focus:outline-none cursor-pointer"
-                                                        >
-                                                            {['Processing', 'Shipped', 'Delivered', 'Cancelled'].map(s => (
-                                                                <option key={s} value={s} className="bg-gray-900">{s}</option>
-                                                            ))}
-                                                        </select>
+                                                            <button
+                                                                onClick={() => setSelectedOrder(order)}
+                                                                className="p-2 text-white/20 hover:text-neon transition-colors"
+                                                                title="View Details"
+                                                            >
+                                                                <Eye size={16} />
+                                                            </button>
+                                                            <select
+                                                                value={order.status}
+                                                                onChange={(e) => handleUpdateOrderStatus(order._id, e.target.value)}
+                                                                className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-[10px] font-mono uppercase text-white/60 focus:border-neon focus:outline-none cursor-pointer"
+                                                            >
+                                                                {['Processing', 'Shipped', 'Delivered', 'Cancelled'].map(s => (
+                                                                    <option key={s} value={s} className="bg-gray-900">{s}</option>
+                                                                ))}
+                                                            </select>
                                                     </td>
                                                 </tr>
                                             ))
@@ -594,6 +614,108 @@ const AdminDashboard = () => {
                                         )}
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {/* Order Detail Modal */}
+                {selectedOrder && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 animate-fade-in">
+                        <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setSelectedOrder(null)}></div>
+                        <div className="relative w-full max-w-2xl glass-card border-neon/20 overflow-hidden shadow-2xl shadow-neon/10 animate-in zoom-in-95 duration-300">
+                            {/* Modal Header */}
+                            <div className="bg-white/5 border-b border-white/5 px-6 py-5 flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-3">
+                                        <ShoppingBag className="text-neon" size={16} />
+                                        Order System Log
+                                    </h3>
+                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">Order Hash: {selectedOrder._id.toUpperCase()}</p>
+                                </div>
+                                <button 
+                                    onClick={() => setSelectedOrder(null)}
+                                    className="p-2 hover:bg-white/5 rounded-full text-white/40 hover:text-white transition-all"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            {/* Modal Content */}
+                            <div className="p-6 md:p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                                    <div className="space-y-4">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2">
+                                            <Mail size={12} /> Customer Identity
+                                        </h4>
+                                        <div className="text-xs space-y-1 text-white/70">
+                                            <p className="font-bold text-white text-sm">{selectedOrder.user?.email || 'Unknown User'}</p>
+                                            <p className="font-mono text-[9px] text-white/30 uppercase">{selectedOrder.user?._id || 'GUEST'}</p>
+                                        </div>
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2 pt-2">
+                                            <MapPin size={12} /> Shipping Node
+                                        </h4>
+                                        <div className="text-xs space-y-1 text-white/70">
+                                            <p className="font-bold text-white">{selectedOrder.shippingAddress.fullName}</p>
+                                            <p>{selectedOrder.shippingAddress.address}</p>
+                                            <p>{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.postalCode}</p>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4 text-right md:text-left">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2 md:justify-start justify-end">
+                                            <CreditCard size={12} /> Payment Protocol
+                                        </h4>
+                                        <div className="text-xs space-y-1 text-white/70">
+                                            <p className="font-bold text-white text-sm uppercase">{selectedOrder.paymentMethod || 'Card'}</p>
+                                            <div className="pt-2">
+                                                <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
+                                                    selectedOrder.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                                                    selectedOrder.status === 'Processing' ? 'bg-neon/10 text-neon border-neon/20' :
+                                                    'bg-white/10 text-white/60 border-white/20'
+                                                }`}>
+                                                    {selectedOrder.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 flex items-center gap-2 md:justify-start justify-end pt-2">
+                                            <Calendar size={12} /> Log Timestamp
+                                        </h4>
+                                        <p className="text-xs text-white/70">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Provisioned Hardware</h4>
+                                    <div className="space-y-4">
+                                        {selectedOrder.items.map((item, i) => (
+                                            <div key={i} className="flex items-center gap-4 p-3 bg-white/5 rounded-xl border border-white/5">
+                                                <div className="w-16 h-16 rounded-lg bg-charcoal overflow-hidden border border-white/5 flex-shrink-0">
+                                                    <img src={item.imageURL} alt={item.name} className="w-full h-full object-cover opacity-80" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-xs font-bold truncate uppercase tracking-wide">{item.name}</p>
+                                                    <p className="text-[10px] font-mono text-white/40 mt-1">QTY: {item.quantity} × ${item.price.toFixed(2)}</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-sm font-black text-neon">${(item.price * item.quantity).toFixed(2)}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Modal Footer */}
+                            <div className="bg-white/5 border-t border-white/5 px-8 py-6 flex items-center justify-between">
+                                <button
+                                    onClick={() => setSelectedOrder(null)}
+                                    className="px-6 py-2 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-all"
+                                >
+                                    Close Log
+                                </button>
+                                <div className="flex items-center gap-4">
+                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Gross Total</p>
+                                    <p className="text-2xl font-black italic tracking-tighter text-neon shadow-neon/20 shadow-lg">${selectedOrder.total.toFixed(2)}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
