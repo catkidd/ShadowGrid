@@ -481,6 +481,7 @@ const AdminDashboard = () => {
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Order ID</th>
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Customer</th>
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Date</th>
+                                            <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Payment</th>
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40">Status</th>
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40 text-right">Total</th>
                                             <th className="p-5 text-[10px] font-black uppercase tracking-widest text-white/40 text-right">Actions</th>
@@ -488,15 +489,18 @@ const AdminDashboard = () => {
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
                                         {ordersLoading ? (
-                                            <tr><td colSpan="6" className="p-20 text-center text-white/20 font-mono animate-pulse uppercase tracking-[0.2em]">Loading Orders...</td></tr>
+                                            <tr><td colSpan="7" className="p-20 text-center text-white/20 font-mono animate-pulse uppercase tracking-[0.2em]">Loading Orders...</td></tr>
                                         ) : orders.length === 0 ? (
-                                            <tr><td colSpan="6" className="p-20 text-center text-white/40 font-mono uppercase tracking-[0.2em]">No orders in the system yet.</td></tr>
+                                            <tr><td colSpan="7" className="p-20 text-center text-white/40 font-mono uppercase tracking-[0.2em]">No orders in the system yet.</td></tr>
                                         ) : (
                                             orders.map(order => (
                                                 <tr key={order._id} className="hover:bg-white/[0.02] transition-colors">
                                                     <td className="p-5 text-xs font-mono font-bold text-white">{order._id.slice(-8).toUpperCase()}</td>
                                                     <td className="p-5 text-xs font-bold text-white/80">{order.user?.email || 'Unknown'}</td>
                                                     <td className="p-5 text-xs text-white/40 font-mono">{new Date(order.createdAt).toLocaleDateString()}</td>
+                                                    <td className="p-5">
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">{order.paymentMethod || 'Card'}</span>
+                                                    </td>
                                                     <td className="p-5">
                                                         <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
                                                             order.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
