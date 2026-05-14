@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ProductSkeleton = () => {
     return (
         <div className="group relative rounded-2xl overflow-hidden glass-card border border-white/5 bg-charcoal/30">

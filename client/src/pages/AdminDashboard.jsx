@@ -57,6 +57,7 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         if (!authLoading && isAdmin) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchProducts();
             fetchOrders();
         }

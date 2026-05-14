@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../lib/api';
@@ -19,13 +19,7 @@ const Profile = () => {
     const [orders, setOrders] = useState([]);
     const [isLoadingOrders, setIsLoadingOrders] = useState(false);
 
-    useEffect(() => {
-        if (activeTab === 'orders' && orders.length === 0) {
-            fetchOrders();
-        }
-    }, [activeTab]);
-
-    const fetchOrders = async () => {
+    const fetchOrders = useCallback(async () => {
         setIsLoadingOrders(true);
         try {
             const response = await fetch(`${API_URL}/api/orders/my`, {
@@ -41,7 +35,14 @@ const Profile = () => {
         } finally {
             setIsLoadingOrders(false);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        if (activeTab === 'orders' && orders.length === 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            fetchOrders();
+        }
+    }, [activeTab, orders.length, fetchOrders]);
 
     const handlePasswordUpdate = async (e) => {
         e.preventDefault();
