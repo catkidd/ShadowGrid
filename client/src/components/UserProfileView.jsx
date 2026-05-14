@@ -82,7 +82,7 @@ const UserProfileView = ({
                             className="flex items-center gap-3 px-6 py-4 mt-4 bg-red-500/5 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 border border-red-500/10 rounded-xl transition-all text-[10px] font-bold uppercase tracking-widest"
                         >
                             <LogOut size={14} />
-                            Terminate Session
+                            Logout
                         </button>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ const UserProfileView = ({
                                 <div>
                                     <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
                                         <Key className="text-neon" size={16} />
-                                        Update Credentials
+                                        Change Password
                                     </h3>
                                     <form onSubmit={handlePasswordUpdate} className="space-y-6 max-w-md">
                                         <div className="space-y-2">
@@ -142,7 +142,7 @@ const UserProfileView = ({
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 ml-1">New Secure Password</label>
+                                            <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 ml-1">New Password</label>
                                             <input
                                                 type="password"
                                                 value={newPassword}
@@ -156,9 +156,9 @@ const UserProfileView = ({
                                             disabled={isUpdatingPassword}
                                             className="w-full flex items-center justify-center gap-3 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 neon-glow"
                                         >
-                                            {isUpdatingPassword ? 'Syncing...' : (
+                                            {isUpdatingPassword ? 'Updating...' : (
                                                 <>
-                                                    Update Identity
+                                                    Update Password
                                                     <ArrowRight size={14} />
                                                 </>
                                             )}
