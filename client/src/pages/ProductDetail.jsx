@@ -204,9 +204,11 @@ const ProductDetail = () => {
                             <div className="flex items-center gap-6">
                                 <div className="flex flex-col">
                                     {(() => {
-                                        const discount = product.originalPrice && product.originalPrice > product.price 
-                                            ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
-                                            : 0;
+                                        const discount = product.showDiscount && (product.discount > 0 
+                                            ? product.discount 
+                                            : (product.originalPrice && product.originalPrice > product.price 
+                                                ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
+                                                : 0));
                                         return discount > 0 ? (
                                             <div className="flex items-center gap-3">
                                                 <span className="text-lg text-white/30 line-through font-mono">

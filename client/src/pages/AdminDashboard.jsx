@@ -23,7 +23,7 @@ const AdminDashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [formData, setFormData] = useState({
-        name: '', brand: '', category: '', price: '', originalPrice: '', discount: '', sku: '', stock: '', imageURL: '', description: '', specs: ''
+        name: '', brand: '', category: '', price: '', originalPrice: '', discount: '0', sku: '', stock: '', imageURL: '', description: '', specs: '', showDiscount: false
     });
 
     const [orders, setOrders] = useState([]);
@@ -193,6 +193,8 @@ const AdminDashboard = () => {
             price: parseFloat(formData.price),
             salePrice: formData.salePrice ? parseFloat(formData.salePrice) : parseFloat(formData.price),
             originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : parseFloat(formData.price),
+            discount: parseFloat(formData.discount) || 0,
+            showDiscount: !!formData.showDiscount,
             stock: parseInt(formData.stock),
             specs: typeof formData.specs === 'string' ? formData.specs.split(',').map(s => s.trim()) : formData.specs
         };
@@ -205,7 +207,7 @@ const AdminDashboard = () => {
     };
 
     const resetForm = () => {
-        setFormData({ name: '', brand: '', category: '', price: '', salePrice: '', originalPrice: '', sku: '', stock: '', imageURL: '', description: '', specs: '' });
+        setFormData({ name: '', brand: '', category: '', price: '', salePrice: '', originalPrice: '', discount: '0', sku: '', stock: '', imageURL: '', description: '', specs: '', showDiscount: false });
         setEditingProduct(null);
         setIsCreating(false);
     };
@@ -362,7 +364,17 @@ const AdminDashboard = () => {
                                         <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <InputField label="Sale Price ($)" type="number" value={formData.salePrice} onChange={v => setFormData({...formData, salePrice: v})} placeholder="0.00" />
                                             <InputField label="Original / List Price ($)" type="number" value={formData.originalPrice} onChange={v => setFormData({...formData, originalPrice: v})} placeholder="0.00" />
-                                            <InputField label="Display Price ($)" type="number" value={formData.price} onChange={v => setFormData({...formData, price: v})} placeholder="0.00" />
+                                            <InputField label="Discount (%)" type="number" value={formData.discount} onChange={v => setFormData({...formData, discount: v})} placeholder="0" />
+                                        </div>
+                                        <div className="md:col-span-2 flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                                            <input 
+                                                type="checkbox" 
+                                                id="showDiscount"
+                                                checked={formData.showDiscount} 
+                                                onChange={e => setFormData({...formData, showDiscount: e.target.checked})}
+                                                className="w-5 h-5 accent-neon cursor-pointer"
+                                            />
+                                            <label htmlFor="showDiscount" className="text-xs font-bold uppercase tracking-widest cursor-pointer select-none">Show Discount on Card</label>
                                         </div>
                                         <div className="md:col-span-2">
                                             <InputField label="Specifications (Comma separated)" value={Array.isArray(formData.specs) ? formData.specs.join(', ') : formData.specs} onChange={v => setFormData({...formData, specs: v})} placeholder="e.g. RGB, Mechanical, Wireless" />
@@ -444,11 +456,13 @@ const AdminDashboard = () => {
                                                                         price: product.price,
                                                                         salePrice: product.salePrice || '',
                                                                         originalPrice: product.originalPrice || '',
+                                                                        discount: product.discount || '0',
                                                                         sku: product.sku || '',
                                                                         stock: product.stock,
                                                                         imageURL: product.imageURL,
                                                                         description: product.description,
-                                                                        specs: product.specs || []
+                                                                        specs: product.specs || [],
+                                                                        showDiscount: !!product.showDiscount
                                                                     });
                                                                     setIsCreating(false);
                                                                 }}
