@@ -17,6 +17,13 @@ if (!process.env.MONGODB_URI) {
     process.exit(1);
 }
 
+if (!process.env.JWT_SECRET) {
+    console.error('CRITICAL ERROR: JWT_SECRET is not defined in environment variables.');
+    console.error('Authentication (Login/Signup) will fail. Please add JWT_SECRET to your Render Environment Variables.');
+    // We don't exit(1) here to allow non-auth parts of the API to work, 
+    // but it will be clear in the logs why auth is failing.
+}
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
