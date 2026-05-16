@@ -2,10 +2,13 @@ import {
     User, Package, Key, LogOut, 
     ShoppingBag, CreditCard, ChevronRight,
     Mail, Shield, ArrowRight, X,
-    MapPin, Box
+    MapPin, Box, Download
 } from 'lucide-react';
 import { ButtonLoader } from './Loader';
 import { useState } from 'react';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import toast from 'react-hot-toast';
 
 const UserProfileView = ({ 
     user, 
@@ -23,6 +26,175 @@ const UserProfileView = ({
     getStatusColor 
 }) => {
     const [selectedOrder, setSelectedOrder] = useState(null);
+
+    const numberToWords = (num) => {
+        const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+        const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+        const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+
+        const convert = (n) => {
+            if (n < 10) return ones[n];
+            if (n < 20) return teens[n - 10];
+            if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + ones[n % 10] : '');
+            if (n < 1000) return ones[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' and ' + convert(n % 100) : '');
+            if (n < 1000000) return convert(Math.floor(n / 1000)) + ' Thousand' + (n % 1000 !== 0 ? ' ' + convert(n % 1000) : '');
+            return 'Large Amount';
+        };
+
+        const dollars = Math.floor(num);
+        const cents = Math.round((num - dollars) * 100);
+        
+        let result = convert(dollars) + ' Dollars';
+        if (cents > 0) result += ' and ' + convert(cents) + ' Cents';
+        return result + ' Only';
+    };
+    
+    const downloadOrderReport = () => {
+        if (!orders || orders.length === 0) return;
+
+        const doc = new jsPDF();
+        
+        // Add ShadowGrid Branding
+        doc.setFillColor(13, 13, 13); // Charcoal background for header
+        doc.rect(0, 0, 210, 40, 'F');
+        
+        doc.setTextColor(0, 255, 170); // Neon Green
+        doc.setFontSize(28);
+        doc.setFont("helvetica", "bold");
+        doc.text("SHADOWGRID", 20, 25);
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("OFFICIAL PURCHASE REPORT", 20, 32);
+        doc.text(`DATE: ${new Date().toLocaleDateString()}`, 150, 25);
+        doc.text(`ACCOUNT: ${user.email.toUpperCase()}`, 150, 32);
+
+        // Summary Section
+        doc.setTextColor(13, 13, 13);
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("PURCHASE SUMMARY", 20, 55);
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Total Transactions: ${orders.length}`, 20, 65);
+        doc.text(`Total Expenditure: $${totalSpent.toFixed(2)}`, 20, 72);
+        doc.text(`Status: Verified Account`, 20, 79);
+
+        // Prepare Table Data (Item-based for detailed tax-like report)
+        const tableColumn = ["Date", "Order ID", "Description", "Rate", "Qty", "Disc %", "Total"];
+        const tableRows = [];
+
+        orders.forEach(order => {
+            order.items.forEach(item => {
+                // Calculate item discount if stored, or default to 0
+                const itemDisc = item.discount || 0;
+                const itemRate = item.price;
+                const itemTotal = itemRate * item.quantity;
+                
+                tableRows.push([
+                    new Date(order.createdAt).toLocaleDateString(),
+                    order._id.toUpperCase().slice(-8),
+                    item.name.toUpperCase(),
+                    `$${itemRate.toFixed(2)}`,
+                    item.quantity.toString(),
+                    `${itemDisc}%`,
+                    `$${itemTotal.toFixed(2)}`
+                ]);
+            });
+        });
+
+        // Add a Summary Row at the bottom
+        tableRows.push([
+            { content: 'GRAND TOTAL EXPENDITURE', colSpan: 6, styles: { halign: 'right', fontStyle: 'bold', fillColor: [240, 240, 240] } },
+            { content: `$${totalSpent.toFixed(2)}`, styles: { fontStyle: 'bold', fillColor: [240, 240, 240], textColor: [0, 150, 100] } }
+        ]);
+
+        // Generate Table
+        autoTable(doc, {
+            startY: 90,
+            head: [tableColumn],
+            body: tableRows,
+            theme: 'grid',
+            headStyles: { 
+                fillColor: [13, 13, 13], 
+                textColor: [0, 255, 170],
+                fontSize: 9,
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            columnStyles: {
+                0: { cellWidth: 20 },
+                1: { cellWidth: 25 },
+                2: { cellWidth: 'auto' },
+                3: { halign: 'right', cellWidth: 22 },
+                4: { halign: 'center', cellWidth: 12 },
+                5: { halign: 'center', cellWidth: 15 },
+                6: { halign: 'right', cellWidth: 22 }
+            },
+            bodyStyles: {
+                fontSize: 8,
+                textColor: [40, 40, 40]
+            },
+            alternateRowStyles: {
+                fillColor: [250, 250, 250]
+            },
+            margin: { top: 90 }
+        });
+
+        // Add "Amount in Words" Section
+        const finalY = doc.lastAutoTable.finalY || 150;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(13, 13, 13);
+        doc.text("TOTAL AMOUNT IN WORDS:", 20, finalY + 15);
+        
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(9);
+        doc.text(numberToWords(totalSpent).toUpperCase(), 20, finalY + 22);
+
+        // Signature Section
+        const sigY = finalY + 50;
+        
+        // Ensure signature doesn't go off page
+        const checkPageHeight = (y) => y > 270;
+        if (checkPageHeight(sigY)) {
+            doc.addPage();
+            // Reset sigY for new page
+            var currentSigY = 50;
+        } else {
+            var currentSigY = sigY;
+        }
+
+        doc.setFont("helvetica", "bold");
+        doc.text("__________________________", 20, currentSigY);
+        doc.text("AUTHORIZED REPRESENTATIVE", 20, currentSigY + 7);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.text("SHADOWGRID MANAGEMENT", 20, currentSigY + 12);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("__________________________", 130, currentSigY);
+        doc.text("CUSTOMER SIGNATURE", 130, currentSigY + 7);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.text(user.email.toUpperCase(), 130, currentSigY + 12);
+
+        // Footer
+        const pageCount = doc.internal.getNumberOfPages();
+        for(let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text(`Purchase History Report - Page ${i} of ${pageCount}`, 105, 285, { align: "center" });
+            doc.text("This is a computer-generated document and does not require a physical signature.", 105, 290, { align: "center" });
+        }
+
+        doc.save(`ShadowGrid_Report_${user.email.split('@')[0]}.pdf`);
+        toast.success("Report downloaded successfully.");
+    };
     
     const totalSpent = orders.reduce((acc, order) => acc + order.total, 0);
     const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
@@ -174,10 +346,21 @@ const UserProfileView = ({
                             </div>
                         ) : (
                             <div className="p-8 animate-fade-in">
-                                <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
-                                    <ShoppingBag className="text-neon" size={16} />
-                                    Order History
-                                </h3>
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                                    <h3 className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-3">
+                                        <ShoppingBag className="text-neon" size={16} />
+                                        Order History
+                                    </h3>
+                                    {orders.length > 0 && (
+                                        <button 
+                                            onClick={downloadOrderReport}
+                                            className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-neon hover:border-neon/30 transition-all group"
+                                        >
+                                            <Download size={14} className="group-hover:scale-110 transition-transform" />
+                                            Download Full Report
+                                        </button>
+                                    )}
+                                </div>
                                 
                                 {isLoadingOrders ? (
                                     <div className="space-y-4">
