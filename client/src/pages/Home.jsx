@@ -98,24 +98,29 @@ const Home = ({ preFilter = 'All' }) => {
                                     
                                     {/* Product Stack */}
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        {/* Display - Back */}
-                                        <div className="absolute top-0 right-0 w-4/5 aspect-video glass-card overflow-hidden border-neon/10 rotate-3 -translate-y-10 translate-x-10 animate-float-slow opacity-60 hover:opacity-100 transition-opacity duration-500">
-                                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=80" alt="Display" className="w-full h-full object-cover" />
+                                        {/* Monitor 1 - Top Left */}
+                                        <div className="absolute top-0 left-0 w-[45%] aspect-square rounded-full glass-card overflow-hidden border-neon/10 -rotate-3 -translate-y-12 -translate-x-12 animate-float-slow opacity-60 hover:opacity-100 hover:scale-110 hover:z-50 transition-all duration-500">
+                                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=80" alt="Monitor High" className="w-full h-full object-cover" />
                                         </div>
 
-                                        {/* Keyboard - Middle */}
-                                        <div className="absolute top-1/4 left-0 w-4/5 aspect-[4/3] glass-card overflow-hidden border-neon/20 -rotate-6 -translate-x-10 animate-float opacity-80 hover:opacity-100 transition-opacity duration-500 z-10">
-                                            <img src="https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&auto=format&fit=crop&q=80" alt="Keyboard" className="w-full h-full object-cover" />
+                                        {/* Keyboard 1 - Top Right */}
+                                        <div className="absolute top-10 right-0 w-[45%] aspect-square rounded-full glass-card overflow-hidden border-neon/10 rotate-6 translate-y-4 translate-x-12 animate-float opacity-70 hover:opacity-100 hover:scale-110 hover:z-50 transition-all duration-500">
+                                            <img src="https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&auto=format&fit=crop&q=80" alt="Keyboard Pro" className="w-full h-full object-cover" />
                                         </div>
 
-                                        {/* Mouse - Front */}
-                                        <div className="absolute bottom-0 right-1/4 w-3/5 aspect-square glass-card overflow-hidden border-neon/40 rotate-12 translate-y-10 animate-float-fast opacity-90 hover:opacity-100 transition-opacity duration-500 z-20">
-                                            <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80" alt="Mouse" className="w-full h-full object-cover" />
+                                        {/* Mouse - Center Front */}
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45%] aspect-square rounded-full glass-card overflow-hidden border-neon/40 rotate-12 animate-float-fast opacity-95 hover:opacity-100 hover:scale-125 transition-all duration-500 z-30">
+                                            <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80" alt="Mouse Core" className="w-full h-full object-cover" />
                                         </div>
 
-                                        {/* Peripheral - Detail */}
-                                        <div className="absolute bottom-1/4 -right-10 w-2/5 aspect-[3/4] glass-card overflow-hidden border-neon/10 -rotate-12 animate-float-slow opacity-40 hover:opacity-80 transition-opacity duration-500">
-                                            <img src="https://images.unsplash.com/photo-1541140134513-85a161dc4a00?w=800&auto=format&fit=crop&q=80" alt="Peripheral" className="w-full h-full object-cover" />
+                                        {/* Keyboard 2 - Bottom Right */}
+                                        <div className="absolute bottom-0 right-4 w-[45%] aspect-square rounded-full glass-card overflow-hidden border-neon/10 -rotate-12 translate-y-12 translate-x-8 animate-float-slow opacity-50 hover:opacity-100 hover:scale-110 hover:z-50 transition-all duration-500">
+                                            <img src="https://images.unsplash.com/photo-1541140134513-85a161dc4a00?w=800&auto=format&fit=crop&q=80" alt="Compact Keyboard" className="w-full h-full object-cover" />
+                                        </div>
+
+                                        {/* Monitor 2 - Bottom Left */}
+                                        <div className="absolute bottom-4 left-4 w-[45%] aspect-square rounded-full glass-card overflow-hidden border-neon/10 rotate-6 translate-y-8 -translate-x-12 animate-float opacity-50 hover:opacity-100 hover:scale-110 hover:z-50 transition-all duration-500">
+                                            <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&auto=format&fit=crop&q=80" alt="Display Grid" className="w-full h-full object-cover" />
                                         </div>
                                     </div>
                                 </div>
