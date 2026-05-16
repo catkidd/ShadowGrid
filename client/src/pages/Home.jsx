@@ -58,36 +58,69 @@ const Home = ({ preFilter = 'All' }) => {
                     </div>
                     
                     <div className="container mx-auto px-6 relative z-10">
-                        <FadeInUp>
-                            <div className="max-w-3xl">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span className="w-12 h-[1px] bg-neon" />
-                                    <span className="text-neon text-xs font-black uppercase tracking-[0.3em]">Premium Hardware Collection</span>
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-0">
+                            <FadeInUp className="lg:w-1/2">
+                                <div className="max-w-3xl">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <span className="w-12 h-[1px] bg-neon" />
+                                        <span className="text-neon text-xs font-black uppercase tracking-[0.3em]">Premium Hardware Collection</span>
+                                    </div>
+                                    <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-8">
+                                        PRECISION <br />
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/20">REDEFINED.</span>
+                                    </h2>
+                                    <p className="text-lg text-white/60 mb-10 max-w-xl font-medium leading-relaxed">
+                                        Boutique engineering for the digital elite. We source the world's most responsive peripherals to bridge the gap between human and machine.
+                                    </p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <button 
+                                            onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
+                                            className="px-8 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-xs rounded-lg neon-glow flex items-center gap-2 group"
+                                        >
+                                            Shop Catalog
+                                            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                        </button>
+                                        <Link 
+                                            to="/protocols"
+                                            className="px-8 py-4 bg-white/5 border border-white/10 hover:border-white/30 text-white font-black uppercase tracking-widest text-xs rounded-lg transition-all"
+                                        >
+                                            Support
+                                        </Link>
+                                    </div>
                                 </div>
-                                <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-8">
-                                    PRECISION <br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/20">REDEFINED.</span>
-                                </h2>
-                                <p className="text-lg text-white/60 mb-10 max-w-xl font-medium leading-relaxed">
-                                    Boutique engineering for the digital elite. We source the world's most responsive peripherals to bridge the gap between human and machine.
-                                </p>
-                                <div className="flex flex-wrap gap-4">
-                                    <button 
-                                        onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
-                                        className="px-8 py-4 bg-neon text-charcoal font-black uppercase tracking-widest text-xs rounded-lg neon-glow flex items-center gap-2 group"
-                                    >
-                                        Shop Catalog
-                                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                    <Link 
-                                        to="/protocols"
-                                        className="px-8 py-4 bg-white/5 border border-white/10 hover:border-white/30 text-white font-black uppercase tracking-widest text-xs rounded-lg transition-all"
-                                    >
-                                        Support
-                                    </Link>
+                            </FadeInUp>
+
+                            {/* Floating Hardware Gallery */}
+                            <FadeInUp delay={200} className="lg:w-1/2 relative h-[400px] md:h-[600px] w-full max-w-lg lg:max-w-none">
+                                <div className="relative w-full h-full perspective-1000">
+                                    {/* Main Glow */}
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-neon/10 rounded-full blur-[80px] animate-pulse" />
+                                    
+                                    {/* Product Stack */}
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        {/* Display - Back */}
+                                        <div className="absolute top-0 right-0 w-4/5 aspect-video glass-card overflow-hidden border-neon/10 rotate-3 -translate-y-10 translate-x-10 animate-float-slow opacity-60 hover:opacity-100 transition-opacity duration-500">
+                                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=80" alt="Display" className="w-full h-full object-cover" />
+                                        </div>
+
+                                        {/* Keyboard - Middle */}
+                                        <div className="absolute top-1/4 left-0 w-4/5 aspect-[4/3] glass-card overflow-hidden border-neon/20 -rotate-6 -translate-x-10 animate-float opacity-80 hover:opacity-100 transition-opacity duration-500 z-10">
+                                            <img src="https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&auto=format&fit=crop&q=80" alt="Keyboard" className="w-full h-full object-cover" />
+                                        </div>
+
+                                        {/* Mouse - Front */}
+                                        <div className="absolute bottom-0 right-1/4 w-3/5 aspect-square glass-card overflow-hidden border-neon/40 rotate-12 translate-y-10 animate-float-fast opacity-90 hover:opacity-100 transition-opacity duration-500 z-20">
+                                            <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80" alt="Mouse" className="w-full h-full object-cover" />
+                                        </div>
+
+                                        {/* Peripheral - Detail */}
+                                        <div className="absolute bottom-1/4 -right-10 w-2/5 aspect-[3/4] glass-card overflow-hidden border-neon/10 -rotate-12 animate-float-slow opacity-40 hover:opacity-80 transition-opacity duration-500">
+                                            <img src="https://images.unsplash.com/photo-1541140134513-85a161dc4a00?w=800&auto=format&fit=crop&q=80" alt="Peripheral" className="w-full h-full object-cover" />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </FadeInUp>
+                            </FadeInUp>
+                        </div>
                     </div>
                 </header>
             )}
