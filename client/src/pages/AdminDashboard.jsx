@@ -117,6 +117,8 @@ const AdminDashboard = () => {
             p.category.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }, [products, searchQuery]);
+    
+    }, [products, searchQuery]);
 
     const handleAction = async (method, url, body = null) => {
         try {
@@ -362,9 +364,45 @@ const AdminDashboard = () => {
                                         <InputField label="SKU (Unique)" value={formData.sku} onChange={v => setFormData({...formData, sku: v})} placeholder="e.g. SG-KB-001" />
                                         <InputField label="Inventory Count" type="number" value={formData.stock} onChange={v => setFormData({...formData, stock: v})} placeholder="0" />
                                         <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <InputField label="Sale Price ($)" type="number" value={formData.salePrice} onChange={v => setFormData({...formData, salePrice: v})} placeholder="0.00" />
-                                            <InputField label="Original / List Price ($)" type="number" value={formData.originalPrice} onChange={v => setFormData({...formData, originalPrice: v})} placeholder="0.00" />
-                                            <InputField label="Discount (%)" type="number" value={formData.discount} onChange={v => setFormData({...formData, discount: v})} placeholder="0" />
+                                            <InputField 
+                                                label="Sale Price ($)" 
+                                                type="number" 
+                                                value={formData.salePrice} 
+                                                onChange={v => {
+                                                    const sale = parseFloat(v);
+                                                    const original = parseFloat(formData.originalPrice);
+                                                    let disc = formData.discount;
+                                                    if (original > 0 && !isNaN(sale)) {
+                                                        disc = String(Math.max(0, Math.round(((original - sale) / original) * 100)));
+                                                    }
+                                                    setFormData({...formData, salePrice: v, discount: disc});
+                                                }} 
+                                                placeholder="0.00" 
+                                            />
+                                            <InputField 
+                                                label="Original / List Price ($)" 
+                                                type="number" 
+                                                value={formData.originalPrice} 
+                                                onChange={v => {
+                                                    const original = parseFloat(v);
+                                                    const sale = parseFloat(formData.salePrice);
+                                                    let disc = formData.discount;
+                                                    if (original > 0 && !isNaN(sale)) {
+                                                        disc = String(Math.max(0, Math.round(((original - sale) / original) * 100)));
+                                                    } else if (!v || original === 0) {
+                                                        disc = '0';
+                                                    }
+                                                    setFormData({...formData, originalPrice: v, discount: disc});
+                                                }} 
+                                                placeholder="0.00" 
+                                            />
+                                            <InputField 
+                                                label="Discount (%)" 
+                                                type="number" 
+                                                value={formData.discount} 
+                                                readOnly={true}
+                                                placeholder="0" 
+                                            />
                                         </div>
                                         <div className="md:col-span-2 flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
                                             <input 
@@ -762,15 +800,16 @@ const MetricCard = ({ label, value, icon: Icon, color }) => (
     </div>
 );
 
-const InputField = ({ label, type = 'text', value, onChange, placeholder }) => (
+const InputField = ({ label, type = 'text', value, onChange, placeholder, readOnly = false }) => (
     <div className="space-y-2">
         <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 font-mono pl-1">{label}</label>
         <input 
             type={type} 
             value={value}
-            onChange={e => onChange(e.target.value)}
+            onChange={e => onChange && onChange(e.target.value)}
             placeholder={placeholder}
-            className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono focus:border-neon focus:outline-none transition-all placeholder:text-white/10"
+            readOnly={readOnly}
+            className={`w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono focus:border-neon focus:outline-none transition-all placeholder:text-white/10 ${readOnly ? 'opacity-40 cursor-not-allowed border-dashed select-none' : ''}`}
         />
     </div>
 );
