@@ -117,8 +117,6 @@ const AdminDashboard = () => {
             p.category.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }, [products, searchQuery]);
-    
-    }, [products, searchQuery]);
 
     const handleAction = async (method, url, body = null) => {
         try {
